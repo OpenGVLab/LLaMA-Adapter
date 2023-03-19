@@ -41,7 +41,7 @@ We will release the training code soon. We use 52K instruction-following [data](
 
 ## Generate
 
-First, request access to pretrained LLaMA models by filling [this form](https://forms.gle/jk851eBVbX1m5TAv5) (official) or download 7B LLaMA from [here](https://huggingface.co/nyanko7/LLaMA-7B/tree/main) (unofficial). Then, download the weights of LLaMA-Adapter from [here](#weight of llama-adapter).
+First, request access to pretrained LLaMA models by filling [this form](https://forms.gle/jk851eBVbX1m5TAv5) (official) or download 7B LLaMA from [here](https://huggingface.co/nyanko7/LLaMA-7B/tree/main) (unofficial). Then, download the weights of LLaMA-Adapter from [here](https://github.com/ZrrSkywalker/LLaMA-Adapter/releases/download/v.1.0.0/llama_adapter_len10_layer30_release.pth).
 
 Here is an example to generate instruction-following sentences with 7B LLaMA model and LLaMA-Adapter:
 ```bash
