@@ -27,9 +27,9 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-## Generate
+## Inference
 
-Please request access to the pretrained LLaMA models by filling [this form](https://forms.gle/jk851eBVbX1m5TAv5) (official) or download the LLaMA-7B from [Hugging Face](https://huggingface.co/nyanko7/LLaMA-7B/tree/main) (unofficial). Then, download the weights of our LLaMA-Adapter from [here](https://github.com/ZrrSkywalker/LLaMA-Adapter/releases/download/v.1.0.0/llama_adapter_len10_layer30_release.pth).
+Please request access to the pre-trained LLaMA from [this form](https://forms.gle/jk851eBVbX1m5TAv5) (official) or download the LLaMA-7B from [Hugging Face](https://huggingface.co/nyanko7/LLaMA-7B/tree/main) (unofficial). Then, obtain the weights of our LLaMA-Adapter from [here](https://github.com/ZrrSkywalker/LLaMA-Adapter/releases/download/v.1.0.0/llama_adapter_len10_layer30_release.pth). We denote the path to the downloaded weights of LLaMA and adapters as `ADAPTER_PATH` and `TARGET_FOLDER`.
 
 Here is an example to generate instruction-following sentences with 7B LLaMA model and our LLaMA-Adapter:
 ```bash
@@ -426,4 +426,7 @@ Day 6: Visit the Floating Market, the Royal Palace, and the Khao San Road.
 * **LLaMA-Adapter**: This poem is good because it uses simple language to convey a powerful message. It explores the themes of loneliness and isolation, and captures the feelings of alienation and despair that many people experience. The poem also uses imagery to create a vivid picture of the emotions being described.
 
 ## Contributors
-Peng Gao, Jiaming Han, Renrui Zhang
+[Peng Gao](https://scholar.google.com/citations?user=_go6DPsAAAAJ&hl=zh-CN), [Jiaming Han](https://csuhan.com), [Renrui Zhang](https://scholar.google.com/citations?user=YlL3xN4AAAAJ&hl=zh-CN)
+
+## Acknowledgement
+This repo benefits from [LLaMA](https://github.com/facebookresearch/llama), [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca), and [Alpaca-Lora](https://github.com/tloen/alpaca-lora). Thanks for their wonderful works.
