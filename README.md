@@ -4,7 +4,7 @@ This repo proposes **LLaMA-Adapter**, a lightweight and simple adapter for fine-
 
 ## Overview
 
-By inserting adapters into LLaMA's transformer, our method only introduces **1\~8M** learnable parameters, and turns a LLaMA into an instruction-following model within **25~50 minutes**. LLaMA-Adapter is plug-and-play due to a proposed Zero Attention mechanism, and can be simply extended to multi-modal input instructions. After fine-tuning, LLaMA-Adapter can generate high-quality instruction-following sentences, comparable to the fully fine-tuned [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) and [Alpaca-Lora](https://github.com/tloen/alpaca-lora). See examples below.
+By inserting adapters into LLaMA's transformer, our method only introduces **1\~8M** learnable parameters, and turns a LLaMA into an instruction-following model within **25~50 minutes**. LLaMA-Adapter is plug-and-play due to a proposed Zero Attention mechanism, and can be simply extended to multi-modal input instructions. After fine-tuning, LLaMA-Adapter can generate high-quality instruction-following sentences, comparable to the fully fine-tuned [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) and [Alpaca-Lora](https://github.com/tloen/alpaca-lora).
 
 
 <div align="center">
@@ -43,7 +43,7 @@ We will release the training code soon. We use 52K instruction-following [data](
 
 First, request access to pretrained LLaMA models by filling [this form](https://forms.gle/jk851eBVbX1m5TAv5) (official) or download 7B LLaMA from [here](https://huggingface.co/nyanko7/LLaMA-7B/tree/main) (unofficial). Then, download the weights of LLaMA-Adapter from [here](https://github.com/ZrrSkywalker/LLaMA-Adapter/releases/download/v.1.0.0/llama_adapter_len10_layer30_release.pth).
 
-Here is an example to generate instruction-following sentences with 7B LLaMA model and LLaMA-Adapter:
+Here is an example to generate instruction-following sentences with 7B LLaMA model and our LLaMA-Adapter:
 ```bash
 torchrun --nproc_per_node 1 example.py --ckpt_dir $TARGET_FOLDER/model_size --tokenizer_path $TARGET_FOLDER/tokenizer.model --adapter_path $ADAPTER_PATH
 ```
