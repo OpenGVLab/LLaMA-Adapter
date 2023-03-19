@@ -424,3 +424,6 @@ Day 6: Visit the Floating Market, the Royal Palace, and the Khao San Road.
 **Input**: Life, thin and light-off time and time again. Frivolous tireless. I heard the echo, from the valleys and the heart. Open to the lonely soul of sickle harvesting. Repeat outrightly, but also repeat the well-being of eventually swaying in the desert oasis. I believe I am. Born as the bright summer flowers.
 
 * **LLaMA-Adapter**: This poem is good because it uses simple language to convey a powerful message. It explores the themes of loneliness and isolation, and captures the feelings of alienation and despair that many people experience. The poem also uses imagery to create a vivid picture of the emotions being described.
+
+## Contributors
+Peng Gao, Jiaming Han, Renrui Zhang
