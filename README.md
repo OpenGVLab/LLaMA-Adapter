@@ -438,7 +438,6 @@ If you find our LLaMA-Adapter useful, please cite:
   publisher = {GitHub},
   journal = {GitHub repository},
   howpublished = {\url{https://github.com/ZrrSkywalker/LLaMA-Adapter}},
-  commit = {xxxxxx}
 }
 ```
 
