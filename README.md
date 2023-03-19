@@ -29,7 +29,7 @@ pip install -e .
 
 ## Generate
 
-Please request access to the pretrained LLaMA models by filling [this form](https://forms.gle/jk851eBVbX1m5TAv5) (official) or download the 7B LLaMA from [Hugging Face](https://huggingface.co/nyanko7/LLaMA-7B/tree/main) (unofficial). Then, download the weights of our LLaMA-Adapter from [here](https://github.com/ZrrSkywalker/LLaMA-Adapter/releases/download/v.1.0.0/llama_adapter_len10_layer30_release.pth).
+Please request access to the pretrained LLaMA models by filling [this form](https://forms.gle/jk851eBVbX1m5TAv5) (official) or download the LLaMA-7B from [Hugging Face](https://huggingface.co/nyanko7/LLaMA-7B/tree/main) (unofficial). Then, download the weights of our LLaMA-Adapter from [here](https://github.com/ZrrSkywalker/LLaMA-Adapter/releases/download/v.1.0.0/llama_adapter_len10_layer30_release.pth).
 
 Here is an example to generate instruction-following sentences with 7B LLaMA model and our LLaMA-Adapter:
 ```bash
