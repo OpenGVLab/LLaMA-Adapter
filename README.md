@@ -425,8 +425,22 @@ Day 6: Visit the Floating Market, the Royal Palace, and the Khao San Road.
 
 * **LLaMA-Adapter**: This poem is good because it uses simple language to convey a powerful message. It explores the themes of loneliness and isolation, and captures the feelings of alienation and despair that many people experience. The poem also uses imagery to create a vivid picture of the emotions being described.
 
+
 ## Contributors
 [Peng Gao](https://scholar.google.com/citations?user=_go6DPsAAAAJ&hl=zh-CN), [Jiaming Han](https://csuhan.com), [Renrui Zhang](https://scholar.google.com/citations?user=YlL3xN4AAAAJ&hl=zh-CN)
+
+## Citation
+If you find our LLaMA-Adapter useful, please cite:
+```bash
+@misc{llamaadapter2023,
+  title = {LLaMA-Adapter: Lightweight and Simple Adapters for LLaMA},
+  year = {2023},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/ZrrSkywalker/LLaMA-Adapter}},
+  commit = {xxxxxx}
+}
+```
 
 ## Acknowledgement
 This repo benefits from [LLaMA](https://github.com/facebookresearch/llama), [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca), and [Alpaca-Lora](https://github.com/tloen/alpaca-lora). Thanks for their wonderful works.
