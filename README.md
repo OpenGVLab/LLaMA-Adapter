@@ -10,11 +10,11 @@ This repo proposes **LLaMA-Adapter**, a lightweight and simple adapter for fine-
 
 ## Overview
 
-By inserting adapters into LLaMA's transformer, our method only introduces **1.2M** learnable parameters, and turns a LLaMA into an instruction-following model within **50 minutes**. LLaMA-Adapter is plug-and-play due to a proposed Zero Attention mechanism, and can be simply extended to multi-modal input instructions. After fine-tuning, LLaMA-Adapter can generate high-quality instruction-following sentences, comparable to the fully fine-tuned [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) and [Alpaca-Lora](https://github.com/tloen/alpaca-lora).
+By inserting adapters into LLaMA's transformer, our method only introduces **1.2M** learnable parameters, and turns a LLaMA into an instruction-following model within **1 hour**. LLaMA-Adapter is plug-and-play due to a proposed Zero Attention mechanism, and can be simply extended to multi-modal input instructions. After fine-tuning, LLaMA-Adapter can generate high-quality instruction-following sentences, comparable to the fully fine-tuned [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) and [Alpaca-Lora](https://github.com/tloen/alpaca-lora).
 
 
 <div align="center">
-  <img src="pipeline.png"/>
+  <img src="pipeline2.png"/>
 </div>
 
 
