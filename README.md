@@ -1,22 +1,28 @@
-# Lightweight and Simple Adapters for LLaMA 🚀
+# LLaMA-Adapter: Efficient Fine-tuning of LLaMA 🚀
 
-This repo proposes **LLaMA-Adapter**, a lightweight and simple adapter for fine-tuning instruction-following [LLaMA](https://github.com/facebookresearch/llama) models 🔥, using 52K data provied by [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca).
+Official implementation of ['LLaMA-Adapter: Efficient Fine-tuning of Language Models with Zero-init Attention'](https://github.com/ZrrSkywalker/LLaMA-Adapter/blob/main/LLaMA-Adapter-arXiv.pdf).
+
+This repo proposes **LLaMA-Adapter**, a lightweight adaption method for fine-tuning instruction-following [LLaMA](https://github.com/facebookresearch/llama) models 🔥, using 52K data provied by [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca).
 
 
 
 ## Overview
-
+Efficiency Comparison:
 |  Model | Parameters | Storage Space | Training Time  
 | :-----: | :-----: |:-----:| :-----: |
 |  [Alpaca](https://github.com/tatsu-lab/stanford_alpaca) | 7B |13G| 3 Hours|
 |  LLaMA-Adapter | 1.2M |4.7M| 1 Hour|
 
-By inserting adapters into LLaMA's transformer, our method only introduces **1.2M** learnable parameters, and turns a LLaMA into an instruction-following model within **1 hour**. LLaMA-Adapter is plug-and-play due to a proposed Zero Attention mechanism, and can be simply extended to multi-modal input instructions. After fine-tuning, LLaMA-Adapter can generate high-quality instruction-following sentences, comparable to the fully fine-tuned [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) and [Alpaca-Lora](https://github.com/tloen/alpaca-lora).
-
+By inserting adapters into LLaMA's transformer, our method only introduces **1.2M** learnable parameters, and turns a LLaMA into an instruction-following model within **1 hour**. We propose a **Zero-init Attention** mechanism for stable training at early stages, and can be simply extended to multi-modal input instructions, such as image, audio, and video. After fine-tuning, LLaMA-Adapter can generate high-quality instruction-following sentences, comparable to the fully fine-tuned [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) and [Alpaca-Lora](https://github.com/tloen/alpaca-lora).
 
 <div align="center">
   <img src="pipeline.png"/>
 </div>
+
+## News
+* **TODO**: training code, multi-modal LLaMA-Adapter, adapters for larger-scale LLaMA models
+* [Paper](https://github.com/ZrrSkywalker/LLaMA-Adapter/blob/main/LLaMA-Adapter-arXiv.pdf) is available on arXiv 📌. 
+* The generation code of LLaMA-Adapter based on 7B LLaMA has been released.
 
 
 ## Setup
