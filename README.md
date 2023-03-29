@@ -29,6 +29,7 @@ Our approach can be simply extended to **Multi-modal Input Instructions**. The r
 * **TODO**: training code, multi-modal LLaMA-Adapter, adapters for larger-scale LLaMA models
 * [Paper](https://arxiv.org/pdf/2303.16199.pdf) is available on arXiv 📌. 
 * The generation code of LLaMA-Adapter based on 7B LLaMA has been released.
+* 🔥 We are **hiring** interns, postdocs and full-time researchers in **General Vision Group, Shanghai AI Lab**, aiming at multi-modality and vision foundation models. If you are interested, please contact gaopeng@pjlab.org.cn.
 
 
 ## Setup
