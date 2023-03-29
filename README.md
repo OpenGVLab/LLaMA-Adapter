@@ -19,7 +19,7 @@ By inserting adapters into LLaMA's transformer, our method only introduces **1.2
   <img src="pipeline.png"/>
 </div>
 
-Our approach can be simply extended to multi-modal input instructions. The reasoning framework of image-conditioned LLaMA-Adapter for [ScienceQA](https://scienceqa.github.io/) is as follows, which is also shared by other modalities, such as audio and video.
+Our approach can be simply extended to **Multi-modal Input Instructions**. The reasoning framework of image-conditioned LLaMA-Adapter for [ScienceQA](https://scienceqa.github.io/) is as follows, which is also shared by other modalities, such as audio and video.
 
 <div align="center">
   <img src="multimodal.png"/>
