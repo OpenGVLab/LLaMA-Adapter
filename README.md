@@ -1,8 +1,8 @@
 # LLaMA-Adapter: Efficient Fine-tuning of LLaMA 🚀
 
-Official implementation of ['LLaMA-Adapter: Efficient Fine-tuning of Language Models with Zero-init Attention'](https://github.com/ZrrSkywalker/LLaMA-Adapter/blob/main/LLaMA-Adapter-arXiv.pdf).
+Official implementation of ['LLaMA-Adapter: Efficient Fine-tuning of Language Models with Zero-init Attention'](https://arxiv.org/abs/2303.16199).
 
-This repo proposes **LLaMA-Adapter**, a lightweight adaption method for fine-tuning instruction-following [LLaMA](https://github.com/facebookresearch/llama) models 🔥, using 52K data provied by [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca).
+This repo proposes **LLaMA-Adapter**, a lightweight adaption method for fine-tuning instruction-following [LLaMA](https://github.com/facebookresearch/llama) models 🔥, using 52K data provided by [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca).
 
 
 
@@ -21,7 +21,7 @@ By inserting adapters into LLaMA's transformer, our method only introduces **1.2
 
 ## News
 * **TODO**: training code, multi-modal LLaMA-Adapter, adapters for larger-scale LLaMA models
-* [Paper](https://github.com/ZrrSkywalker/LLaMA-Adapter/blob/main/LLaMA-Adapter-arXiv.pdf) is available on arXiv 📌. 
+* [Paper](https://arxiv.org/pdf/2303.16199.pdf) is available on arXiv 📌. 
 * The generation code of LLaMA-Adapter based on 7B LLaMA has been released.
 
 
@@ -443,14 +443,13 @@ Day 6: Visit the Floating Market, the Royal Palace, and the Khao San Road.
 [Peng Gao](https://scholar.google.com/citations?user=_go6DPsAAAAJ&hl=zh-CN), [Jiaming Han](https://csuhan.com), [Renrui Zhang](https://scholar.google.com/citations?user=YlL3xN4AAAAJ&hl=zh-CN)
 
 ## Citation
-If you find our LLaMA-Adapter useful, please cite:
+If you find our LLaMA-Adapter code and paper useful, please kindly cite:
 ```bash
-@misc{llamaadapter2023,
-  title = {LLaMA-Adapter: Lightweight and Simple Adapters for LLaMA},
-  year = {2023},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/ZrrSkywalker/LLaMA-Adapter}},
+@article{llamaadapter2023,
+  title = {LLaMA-Adapter: Efficient Fine-tuning of Language Models with Zero-init Attention},
+  author={Zhang, Renrui and Han, Jiaming and Zhou, Aojun and Hu, Xiangfei and Yan, Shilin and Lu, Pan and Li, Hongsheng and Gao, Peng and Qiao Yu},
+  journal={arXiv preprint arXiv:2303.16199},
+  year={2023}
 }
 ```
 
