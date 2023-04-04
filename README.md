@@ -445,6 +445,10 @@ Day 6: Visit the Floating Market, the Royal Palace, and the Khao San Road.
 
 * **LLaMA-Adapter**: This poem is good because it uses simple language to convey a powerful message. It explores the themes of loneliness and isolation, and captures the feelings of alienation and despair that many people experience. The poem also uses imagery to create a vivid picture of the emotions being described.
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=ZrrSkywalker/LLaMA-Adapter&type=Date)](https://star-history.com/#ZrrSkywalker/LLaMA-Adapter&Date)
+
 
 ## Contributors
 [Peng Gao](https://scholar.google.com/citations?user=_go6DPsAAAAJ&hl=zh-CN), [Jiaming Han](https://csuhan.com), [Renrui Zhang](https://scholar.google.com/citations?user=YlL3xN4AAAAJ&hl=zh-CN)
