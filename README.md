@@ -4,7 +4,7 @@ Official implementation of ['LLaMA-Adapter: Efficient Fine-tuning of Language Mo
 
 This repo proposes **LLaMA-Adapter**, a lightweight adaption method for fine-tuning instruction-following [LLaMA](https://github.com/facebookresearch/llama) models 🔥, using 52K data provided by [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca).
 
-
+Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/csuhan/LLaMA-Adapter)
 
 ## Overview
 Efficiency Comparison:
