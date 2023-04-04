@@ -451,7 +451,7 @@ Day 6: Visit the Floating Market, the Royal Palace, and the Khao San Road.
 
 
 ## Contributors
-[Peng Gao](https://scholar.google.com/citations?user=_go6DPsAAAAJ&hl=zh-CN), [Jiaming Han](https://csuhan.com), [Renrui Zhang](https://scholar.google.com/citations?user=YlL3xN4AAAAJ&hl=zh-CN)
+[Peng Gao](https://scholar.google.com/citations?user=_go6DPsAAAAJ&hl=zh-CN), [Jiaming Han](https://csuhan.com), [Renrui Zhang](https://github.com/ZrrSkywalker)
 
 ## Citation
 If you find our LLaMA-Adapter code and paper useful, please kindly cite:
