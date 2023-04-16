@@ -81,7 +81,7 @@ torchrun --nproc_per_node 8 finetuning.py \
     --blr 9e-3 \
     --weight_decay 0.02 \
     --output_dir ./checkpoint/
-
+```
 
 
 ## Comparison with Other Methods
