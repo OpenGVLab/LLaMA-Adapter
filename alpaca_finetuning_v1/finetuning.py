@@ -1,33 +1,31 @@
+import os
 import argparse
 import datetime
 import json
-import numpy as np
-import os
 import time
+import copy
+import random
+import numpy as np
 from pathlib import Path
+from PIL import Image
+
 import torch
 import torch.backends.cudnn as cudnn
+from torch.utils.data import Dataset
 from torch.utils.tensorboard import SummaryWriter
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
-import random
-import timm
 
+import timm
 import timm.optim.optim_factory as optim_factory
 
 import util.misc as misc
 from util.misc import NativeScalerWithGradNormCount as NativeScaler
-from PIL import Image
+from engine_finetuning import train_one_epoch, val_one_epoch
+from transformers import BertTokenizer, GPT2Tokenizer
+from llama import ModelArgs, Transformer, Tokenizer, LLaMA
 import models_llama_adapter
 
-from engine_finetuning import train_one_epoch, val_one_epoch
-
-from torch.utils.data import Dataset
-from transformers import BertTokenizer, GPT2Tokenizer
-import re
-from llama import ModelArgs, Transformer, Tokenizer, LLaMA
-import copy
-import random
 
 
 PROMPT_DICT = {
@@ -42,7 +40,6 @@ PROMPT_DICT = {
         "### Instruction:\n{instruction}\n\n### Response:"
     ),
 }
-
 
 
 class InstructionDataset(Dataset):
@@ -87,9 +84,6 @@ class InstructionDataset(Dataset):
         return example, labels, example_mask
 
 
-
-
-
 def get_args_parser():
     parser = argparse.ArgumentParser('MAE pre-training', add_help=False)
     parser.add_argument('--batch_size', default=64, type=int,
@@ -99,8 +93,6 @@ def get_args_parser():
                         help='Accumulate gradient iterations (for increasing the effective batch size under memory constraints)')
 
     # Model parameters
-
-
     parser.add_argument('--llama_model_path', default='./llama', type=str,
                         help='path of llama model')
     parser.add_argument('--model', default='llama7B_adapter', type=str, metavar='MODEL',
