@@ -1,6 +1,3 @@
-
-from functools import partial
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -10,7 +7,6 @@ from util.pos_embed import get_2d_sincos_pos_embed
 from transformers import GPT2LMHeadModel
 import json
 from llama import ModelArgs, Tokenizer, LLaMA, Transformer
-
 
 
 
@@ -36,7 +32,6 @@ def Llama7B_adapter(args, **kwargs):
     torch.set_default_tensor_type(torch.FloatTensor)
     model_llama_adapter.load_state_dict(checkpoint, strict=False)
 
-
     for name, param in model_llama_adapter.named_parameters():
         if 'adapter' not in name:
             param.requires_grad = False
@@ -44,9 +39,7 @@ def Llama7B_adapter(args, **kwargs):
             param.requires_grad = True
             param.data = param.data.float()
 
-
     for name, param in model_llama_adapter.layers[-1 * args.adapter_layer:].named_parameters():
-
         if 'gate' in name or 'adapter' in name:
             param.data = param.data.float()
             param.requires_grad = True
@@ -54,9 +47,5 @@ def Llama7B_adapter(args, **kwargs):
     return model_llama_adapter
 
 
-
 # set recommended archs
 Llama7B_adapter = Llama7B_adapter
-
-LlamaB_adapter = Llama7B_adapter
-
