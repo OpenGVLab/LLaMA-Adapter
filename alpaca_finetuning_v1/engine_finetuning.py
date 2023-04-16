@@ -7,11 +7,14 @@ import torch
 import util.misc as misc
 import util.lr_sched as lr_sched
 
+
+
 def train_one_epoch(model: torch.nn.Module,
                     data_loader: Iterable, optimizer: torch.optim.Optimizer,
                     device: torch.device, epoch: int, loss_scaler,
                     log_writer=None,
                     args=None):
+  
     model.train(True)
     metric_logger = misc.MetricLogger(delimiter="  ")
     metric_logger.add_meter('lr', misc.SmoothedValue(window_size=1, fmt='{value:.6f}'))
@@ -63,7 +66,6 @@ def train_one_epoch(model: torch.nn.Module,
             log_writer.add_scalar('c_train_loss', c_loss_value_reduce, epoch_1000x)
             log_writer.add_scalar('lr', lr, epoch_1000x)
 
-
     # gather the stats from all processes
     metric_logger.synchronize_between_processes()
     print("Averaged stats:", metric_logger)
@@ -83,7 +85,6 @@ def val_one_epoch(model: torch.nn.Module,
 
     accum_iter = args.accum_iter
 
-
     if log_writer is not None:
         print('log_dir: {}'.format(log_writer.log_dir))
     for data_iter_step, (examples, labels, example_mask) in enumerate(metric_logger.log_every(data_loader, print_freq, header)):
@@ -98,8 +99,6 @@ def val_one_epoch(model: torch.nn.Module,
         if not math.isfinite(loss_value):
             print("Loss is {}, stopping training".format(loss_value))
             sys.exit(1)
-
-
 
         metric_logger.update(closs=c_loss_value)
 
@@ -116,9 +115,7 @@ def val_one_epoch(model: torch.nn.Module,
             log_writer.add_scalar('c_train_loss', c_loss_value_reduce, epoch_1000x)
             log_writer.add_scalar('lr', lr, epoch_1000x)
 
-
     # gather the stats from all processes
     metric_logger.synchronize_between_processes()
     print("Averaged stats:", metric_logger)
     return {k: meter.global_avg for k, meter in metric_logger.meters.items()}
-
