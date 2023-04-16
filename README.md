@@ -62,7 +62,7 @@ torchrun --nproc_per_node 1 example.py \
 
 ## Training
 
-We released the the LLaMA-7B adapter fine-tuning training code. the simple version has been designed for effortless reproduction and minimal dependencies. Stay tuned, as we will soon launch the LLaMA-65B fine-tuning code as well as the multi-model training code.
+We release the simple fine-tuning code of LLaMA-Adapter on LLaMA-7B model at [here](), which is for effortless reproduction with minimal dependencies. We will soon release the fine-tuning code for LLaMA-65B and multi-model LLaMA-Adapter.
 
 We use 52K instruction-following [data](https://github.com/tatsu-lab/stanford_alpaca/blob/main/alpaca_data.json) from [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) for training, and adopt the hyper-parameters as following:
 
