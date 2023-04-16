@@ -62,15 +62,26 @@ torchrun --nproc_per_node 1 example.py \
 
 ## Training
 
-We will release the training code soon. We use 52K instruction-following [data](https://github.com/tatsu-lab/stanford_alpaca/blob/main/alpaca_data.json) from [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) for training, and adopt the hyper-parameters as following:
+We released the the LLaMA-7B adapter fine-tuning training code. the simple version has been designed for effortless reproduction and minimal dependencies. Stay tuned, as we will soon launch the LLaMA-65B fine-tuning code as well as the multi-model training code.
 
-| hyper-parameter | value |
-|-----------------|-------|
-| batch Size      | 64    |
-| learning rate   | 9e-3  |
-| warmup epochs   | 2     |
-| epochs          | 5     |
-| weight decay    | 0.02  |
+We use 52K instruction-following [data](https://github.com/tatsu-lab/stanford_alpaca/blob/main/alpaca_data.json) from [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) for training, and adopt the hyper-parameters as following:
+
+
+```bash
+torchrun --nproc_per_node 8 finetuning.py \
+    --model Llama7B_adapter \
+    --llama_model_path '/data1/llma/' \
+    --data_path '/data1/alpaca_data.json' \
+    --adapter_layer 30 \
+    --adapter_len 10 \
+    --max_seq_len 512 \
+    --batch_size 4 \
+    --epochs 5 \
+    --warmup_epochs 2 \
+    --blr 9e-3 \
+    --weight_decay 0.02 \
+    --output_dir ./checkpoint/
+
 
 
 ## Comparison with Other Methods
