@@ -27,8 +27,8 @@ Our approach can be simply extended to **Multi-modal Input Instructions**. The r
 
 ## News
 * **TODO**: training code, multi-modal LLaMA-Adapter, adapters for larger-scale LLaMA models
-* Finetuning LLaMA-7B is available on [alpaca finetune v1](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/alpaca_finetuning_v1) 📌. 
-* [Paper](https://arxiv.org/pdf/2303.16199.pdf) is available on arXiv 📌. 
+* The **Training Code** for LLaMA-7B is available in [alpaca finetune v1](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/alpaca_finetuning_v1) 📌. 
+* [Paper](https://arxiv.org/pdf/2303.16199.pdf) is available on arXiv. 
 * The generation code of LLaMA-Adapter based on 7B LLaMA has been released.
 * 🔥 We are **hiring** interns, postdocs and full-time researchers in **General Vision Group, Shanghai AI Lab**, aiming at multi-modality and vision foundation models. If you are interested, please contact gaopeng@pjlab.org.cn.
 
@@ -37,7 +37,7 @@ Our approach can be simply extended to **Multi-modal Input Instructions**. The r
 
 Here is a from-scratch script.
 ```bash
-conda create -n llama_adapter -y
+conda create -n llama_adapter -y python=3.8
 conda activate llama_adapter
 
 # install pytorch
@@ -64,14 +64,13 @@ torchrun --nproc_per_node 1 example.py \
 
 We release the simple fine-tuning code of LLaMA-Adapter on LLaMA-7B model at [here](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/alpaca_finetuning_v1), which is for effortless reproduction with minimal dependencies. We will soon release the fine-tuning code for LLaMA-65B and multi-model LLaMA-Adapter.
 
-We use 52K instruction-following [data](https://github.com/tatsu-lab/stanford_alpaca/blob/main/alpaca_data.json) from [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) for training, and adopt the hyper-parameters as following:
-
+Please download the 52K instruction-following training [data](https://github.com/tatsu-lab/stanford_alpaca/blob/main/alpaca_data.json) from Standford Alpaca, and put it under `DATA_PATH`. Then run:
 
 ```bash
 torchrun --nproc_per_node 8 finetuning.py \
     --model Llama7B_adapter \
-    --llama_model_path '/data1/llma/' \
-    --data_path '/data1/alpaca_data.json' \
+    --llama_model_path $TARGET_FOLDER/ \
+    --data_path $DATA_PATH/alpaca_data.json \
     --adapter_layer 30 \
     --adapter_len 10 \
     --max_seq_len 512 \
