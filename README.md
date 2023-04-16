@@ -67,19 +67,21 @@ We release the simple fine-tuning code of LLaMA-Adapter on LLaMA-7B model at [he
 Please download the 52K instruction-following training [data](https://github.com/tatsu-lab/stanford_alpaca/blob/main/alpaca_data.json) from Standford Alpaca, and put it under `DATA_PATH`. Then run:
 
 ```bash
+cd alpaca_finetuning_v1
+
 torchrun --nproc_per_node 8 finetuning.py \
-    --model Llama7B_adapter \
-    --llama_model_path $TARGET_FOLDER/ \
-    --data_path $DATA_PATH/alpaca_data.json \
-    --adapter_layer 30 \
-    --adapter_len 10 \
-    --max_seq_len 512 \
-    --batch_size 4 \
-    --epochs 5 \
-    --warmup_epochs 2 \
-    --blr 9e-3 \
-    --weight_decay 0.02 \
-    --output_dir ./checkpoint/
+         --model Llama7B_adapter \
+         --llama_model_path $TARGET_FOLDER/ \
+         --data_path $DATA_PATH/alpaca_data.json \
+         --adapter_layer 30 \
+         --adapter_len 10 \
+         --max_seq_len 512 \
+         --batch_size 4 \
+         --epochs 5 \
+         --warmup_epochs 2 \
+         --blr 9e-3 \
+         --weight_decay 0.02 \
+         --output_dir ./checkpoint/
 ```
 
 
