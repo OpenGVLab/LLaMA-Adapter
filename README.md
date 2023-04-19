@@ -20,13 +20,13 @@ Efficiency Comparison:
 By inserting adapters into LLaMA's transformer, our method only introduces **1.2M** learnable parameters, and turns a LLaMA into an instruction-following model within **1 hour**. For stablizing training at early stages, we propose a novel **Zero-init Attention** with zero gating mechanism to adaptively incorporate the instructional signals. After fine-tuning, LLaMA-Adapter can generate high-quality instruction-following sentences, comparable to the fully fine-tuned [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) and [Alpaca-Lora](https://github.com/tloen/alpaca-lora).
 
 <div align="center">
-  <img src="pipeline.png"/>
+  <img src="pipeline.png"/ width="90%">
 </div>
 
 Our approach can be simply extended to **Multi-modal Input Instructions**. The reasoning framework of image-conditioned LLaMA-Adapter for [ScienceQA](https://scienceqa.github.io/) is as follows, which is also shared by other modalities, such as audio and video.
 
 <div align="center">
-  <img src="multimodal.png"/>
+  <img src="multimodal.png"/ width="90%">
 </div>
 
 ## News
