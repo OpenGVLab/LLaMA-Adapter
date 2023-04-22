@@ -10,6 +10,13 @@ This repo proposes **LLaMA-Adapter**, a lightweight adaption method for fine-tun
 
 Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/csuhan/LLaMA-Adapter)
 
+
+## <div id="demos">Demos (LLaMA-Adapter V2)</div>
+
+| <img src="examples/multi_model_example_1.png" />  | <img src="examples/multi_model_example_2.png" />  |
+|---|---|
+|  <img src="examples/multi_model_example_3.png" /> | <img src="examples/multi_model_example_4.png" />  |
+
 ## Overview
 Efficiency Comparison:
 |  Model | Parameters | Storage Space | Training Time  
@@ -31,6 +38,7 @@ Our approach can be simply extended to **Multi-modal Input Instructions**. The r
 
 ## News
 * **TODO**: Multi-modal LLaMA-Adapter, Adapters for larger-scale LLaMA models
+* We are releasing **LLaMA-Adapter V2**, a multi-modal instruction model! Check our [demos](#demos)! The technical report and models are coming soon.
 * The **Training Code** for LLaMA-7B is available in [alpaca finetune v1](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/alpaca_finetuning_v1) 📌. 
 * [Paper](https://arxiv.org/pdf/2303.16199.pdf) is available on arXiv. 
 * The generation code of LLaMA-Adapter based on 7B LLaMA has been released.
@@ -88,10 +96,37 @@ torchrun --nproc_per_node 8 finetuning.py \
          --output_dir ./checkpoint/
 ```
 
-
 ## Comparison with Other Methods
 
-### Instruction 1: 
+### Instruction 1:
+How can I develop my critical thinking skills? Give me three suggestions.
+
+* **LLaMA-Adapter V2:**
+1. Read widely: Reading books, articles, and other sources of information can help you develop your critical thinking skills. By exposing yourself to different perspectives and ideas, you can learn to analyze and evaluate information more effectively.
+
+2. Practice mindfulness: Mindfulness is the practice of being present in the moment and paying attention to your thoughts and feelings. By being more aware of your thoughts and emotions, you can better understand and evaluate them. This can help you develop a more objective and rational approach to thinking.
+
+3. Engage in open-minded discussions: Join a discussion group or debate club where you can engage in open-minded discussions with others. This can help you develop your critical thinking skills by challenging your assumptions and encouraging you to consider different perspectives.
+
+* **LLaMA-Adapter V1:**
+1. Read widely and critically. 
+2. Engage in discussions with people who have different perspectives. 
+3. Ask questions and seek out answers.
+
+### Instruction 2:
+As a superhero, how would you explain your origin story to a curious child?
+
+* **LLaMA-Adapter V2:**
+As a superhero, I have a very interesting and exciting origin story to share with you. Once upon a time, there was a young boy named John who lived in a small town. John was always curious and wanted to help others, so he spent his days exploring the world around him and learning about different cultures and people. One day, while he was out exploring, he stumbled upon a mysterious cave. Inside the cave, John found a strange device that had the power to give him incredible abilities. With these abilities, John could fly, shoot lasers from his eyes, and even turn invisible.
+
+John knew that he had to use these powers for good, so he decided to become a superhero and use his abilities to protect his town and the people who lived there. He started to train every day, learning how to use his powers and how to fight against evil. Eventually, John became the superhero known as "The Invisible Man" and he used his powers to help others and make the world a better place.
+
+That's my origin story, and I'm sure you'll love it!
+
+* **LLaMA-Adapter V1:**
+Once upon a time, there was a young boy who had a special power. He used his power to help people in need and protect the innocent. He became known as the superhero, and he used his powers to fight evil and protect the world.
+
+### Instruction 3: 
 Tell me about alpacas.
 
 * **LLaMA-Adapter**: Alpacas are members of the camelid family and are native to the Andes Mountains of South America. They are typically found in herds of 10-20 animals and are known for their gentle nature and their ability to thrive in harsh climates. Alpacas are typically white or grey in color and have long, silky coats. They are also known for their ability to produce high-quality wool, which is used in the production of clothing and other products.
@@ -108,7 +143,7 @@ Tell me about alpacas.
 
 ---
 
-### Instruction 2: 
+### Instruction 4: 
 Tell me about the president of Mexico in 2019.
 
 * **LLaMA-Adapter**: The president of Mexico in 2019 was Andrés Manuel López Obrador, who took office on December 1st, 2018. He is a member of the left-wing party Morena and is known for his populist policies. He has focused on tackling corruption, reducing poverty, and improving the country's infrastructure. He has also been a vocal critic of the United States' immigration policies.
@@ -125,7 +160,7 @@ Tell me about the president of Mexico in 2019.
 
 ---
 
-### Instruction 3: 
+### Instruction 5: 
 Write a Python program that prints the first 10 Fibonacci numbers.
 
 * **LLaMA-Adapter**:
@@ -197,7 +232,7 @@ for i in range(2,10):
 
 ---
 
-### Instruction 4: 
+### Instruction 6: 
 Write a program that prints the numbers from 1 to 100. But for multiples of three print 'Fizz' instead of the number and for the multiples of five print 'Buzz'. For numbers which are multiples of both three and five print 'FizzBuzz'.
 
 * **LLaMA-Adapter**:
