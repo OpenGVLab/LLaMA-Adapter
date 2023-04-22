@@ -2,7 +2,7 @@
 
 Official implementation of ['LLaMA-Adapter: Efficient Fine-tuning of Language Models with Zero-init Attention'](https://arxiv.org/abs/2303.16199).
 
-<p align="center">                                                                                                                                          <img src="logo_v1.png"/ width="30%"> <br>
+<p align="center">                                                                                                                                          <img src="docs/logo_v1.png"/ width="30%"> <br>
   LLaMA-Adapter (from Midjourney)
 </p>
 
@@ -13,9 +13,9 @@ Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.
 
 ## <div id="demos">Demos (LLaMA-Adapter V2)</div>
 
-| <img src="examples/multi_model_example_1.png" />  | <img src="examples/multi_model_example_2.png" />  |
+| <img src="docs/multi_model_example_1.png" />  | <img src="docs/multi_model_example_2.png" />  |
 |---|---|
-|  <img src="examples/multi_model_example_3.png" /> | <img src="examples/multi_model_example_4.png" />  |
+|  <img src="docs/multi_model_example_3.png" /> | <img src="docs/multi_model_example_4.png" />  |
 
 ## Overview
 Efficiency Comparison:
@@ -27,13 +27,13 @@ Efficiency Comparison:
 By inserting adapters into LLaMA's transformer, our method only introduces **1.2M** learnable parameters, and turns a LLaMA into an instruction-following model within **1 hour**. For stablizing training at early stages, we propose a novel **Zero-init Attention** with zero gating mechanism to adaptively incorporate the instructional signals. After fine-tuning, LLaMA-Adapter can generate high-quality instruction-following sentences, comparable to the fully fine-tuned [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) and [Alpaca-Lora](https://github.com/tloen/alpaca-lora).
 
 <div align="center">
-  <img src="pipeline.png"/ width="90%">
+  <img src="docs/pipeline.png"/ width="90%">
 </div>
 
 Our approach can be simply extended to **Multi-modal Input Instructions**. The reasoning framework of image-conditioned LLaMA-Adapter for [ScienceQA](https://scienceqa.github.io/) is as follows, which is also shared by other modalities, such as audio and video.
 
 <div align="center">
-  <img src="multimodal.png"/ width="90%">
+  <img src="docs/multimodal.png"/ width="90%">
 </div>
 
 ## News
