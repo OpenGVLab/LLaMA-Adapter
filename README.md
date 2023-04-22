@@ -117,6 +117,7 @@ How can I develop my critical thinking skills? Give me three suggestions.
 As a superhero, how would you explain your origin story to a curious child?
 
 * **LLaMA-Adapter V2:**
+
 As a superhero, I have a very interesting and exciting origin story to share with you. Once upon a time, there was a young boy named John who lived in a small town. John was always curious and wanted to help others, so he spent his days exploring the world around him and learning about different cultures and people. One day, while he was out exploring, he stumbled upon a mysterious cave. Inside the cave, John found a strange device that had the power to give him incredible abilities. With these abilities, John could fly, shoot lasers from his eyes, and even turn invisible.
 
 John knew that he had to use these powers for good, so he decided to become a superhero and use his abilities to protect his town and the people who lived there. He started to train every day, learning how to use his powers and how to fight against evil. Eventually, John became the superhero known as "The Invisible Man" and he used his powers to help others and make the world a better place.
@@ -124,6 +125,7 @@ John knew that he had to use these powers for good, so he decided to become a su
 That's my origin story, and I'm sure you'll love it!
 
 * **LLaMA-Adapter V1:**
+
 Once upon a time, there was a young boy who had a special power. He used his power to help people in need and protect the innocent. He became known as the superhero, and he used his powers to fight evil and protect the world.
 
 ### Instruction 3: 
