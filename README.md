@@ -13,10 +13,10 @@ Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.
 
 ## <div id="demos">Demos (LLaMA-Adapter V2)</div>
 
-<img src="docs/multi_model_example_1.png" width="60%" />
-<img src="docs/multi_model_example_2.png" width="60%" />
-<img src="docs/multi_model_example_3.png" width="60%" />
-<img src="docs/multi_model_example_4.png" width="60%" />
+<img src="docs/multi_model_example_1.png" width="65%" />
+<img src="docs/multi_model_example_2.png" width="65%" />
+<img src="docs/multi_model_example_3.png" width="65%" />
+<img src="docs/multi_model_example_4.png" width="65%" />
 
 <!-- | <img src="docs/multi_model_example_1.png" />  | <img src="docs/multi_model_example_2.png" />  |
 |---|---|
