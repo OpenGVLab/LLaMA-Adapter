@@ -28,6 +28,16 @@ Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.
 |---|---|
 |  <img src="docs/multi_model_example_3.png" /> | <img src="docs/multi_model_example_4.png" />  | -->
 
+## News
+
+- **[2023.04.28]** 🔥🔥 The code and model checkpoint for **65B LLaMA-Adapter V2** are now available in the [V2 repo](https://github.com/linziyi96/LLaMA-Adapter/tree/chat-65b-demo/llama_adapter_v2_chat65b)! Enjoy!
+- **[2023.04.22]** We have released **LLaMA-Adapter V2**, a multi-modal instruction model! Check out our  [demos](#demos)! The technical report and models are coming soon.
+- **[2023.04.15]** The **Training Code** for LLaMA-7B can now be found in [alpaca finetune v1](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/alpaca_finetuning_v1). 📌
+- **[2023.03.28]** The [paper](https://arxiv.org/pdf/2303.16199.pdf) is available on arXiv.
+- **[2023.03.28]** The generation code for LLaMA-Adapter based on 7B LLaMA has been released.
+- **[TODO]** Multi-modal LLaMA-Adapter, Adapters for larger-scale LLaMA models.:white_check_mark: 
+
+
 ## Overview
 Efficiency Comparison:
 |  Model | Parameters | Storage Space | Training Time  
@@ -47,14 +57,6 @@ Our approach can be simply extended to **Multi-modal Input Instructions**. The r
   <img src="docs/multimodal.png"/ width="90%">
 </div>
 
-## News
-
-- **[2023.04.28]** 🔥🔥 The code and model checkpoint for **65B LLaMA-Adapter V2** are now available in the [V2 repo](https://github.com/linziyi96/LLaMA-Adapter/tree/chat-65b-demo/llama_adapter_v2_chat65b)! Enjoy!
-- **[2023.04.22]** We have released **LLaMA-Adapter V2**, a multi-modal instruction model! Check out our  [demos](#demos)! The technical report and models are coming soon.
-- **[2023.04.15]** The **Training Code** for LLaMA-7B can now be found in [alpaca finetune v1](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/alpaca_finetuning_v1). 📌
-- **[2023.03.28]** The [paper](https://arxiv.org/pdf/2303.16199.pdf) is available on arXiv.
-- **[2023.03.28]** The generation code for LLaMA-Adapter based on 7B LLaMA has been released.
-- **[TODO]** Multi-modal LLaMA-Adapter, Adapters for larger-scale LLaMA models.:white_check_mark: 
 
 ## Hiring Announcement
 
