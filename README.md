@@ -12,7 +12,7 @@ Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.
 
 ## News
 
-- **[2023.04.28]** 🔥🔥 The code and model checkpoint for **65B LLaMA-Adapter V2** are now available in the [V2 repo](https://github.com/linziyi96/LLaMA-Adapter/tree/chat-65b-demo/llama_adapter_v2_chat65b)! Enjoy!
+- **[2023.04.28]** 🔥🔥 The code and model checkpoint for **65B LLaMA-Adapter V2** will be released within one day. Stay Tuned!!
 - **[2023.04.22]** We have released **LLaMA-Adapter V2**, a multi-modal instruction model! Check out our  [demos](#demos)! The technical report and models are coming soon.
 - **[2023.04.15]** The **Training Code** for LLaMA-7B can now be found in [alpaca finetune v1](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/alpaca_finetuning_v1). 📌
 - **[2023.03.28]** The [paper](https://arxiv.org/pdf/2303.16199.pdf) is available on arXiv.
@@ -59,9 +59,7 @@ Our approach can be simply extended to **Multi-modal Input Instructions**. The r
 </div>
 
 
-## Hiring Announcement
 
-🔥 **We are hiring** interns, postdocs, and full-time researchers at the **General Vision Group, Shanghai AI Lab**, with a focus on multi-modality and vision foundation models. If you are interested, please contact [gaopeng@pjlab.org.cn](mailto:gaopeng@pjlab.org.cn).
 
 ## Setup
 
@@ -322,6 +320,10 @@ for (let i = 1; i <= 100; i++) {
 
 ## Contributors
 [Peng Gao](https://scholar.google.com/citations?user=_go6DPsAAAAJ&hl=zh-CN), [Jiaming Han](https://csuhan.com), [Renrui Zhang](https://github.com/ZrrSkywalker), [Aojun Zhou](https://github.com/aojunzz)
+
+## Hiring Announcement
+
+🔥 **We are hiring** interns, postdocs, and full-time researchers at the **General Vision Group, Shanghai AI Lab**, with a focus on multi-modality and vision foundation models. If you are interested, please contact [gaopeng@pjlab.org.cn](mailto:gaopeng@pjlab.org.cn).
 
 ## Citation
 If you find our LLaMA-Adapter code and paper useful, please kindly cite:
