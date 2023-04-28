@@ -12,7 +12,7 @@ Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.
 
 ## News
 
-- **[2023.04.28]** 🔥🔥 The code and model checkpoint for **65B LLaMA-Adapter V2** will be released within one day. Stay Tuned!!
+- **[2023.04.28]** 🔥🔥 The code and model checkpoint for **LLaMA-Adapter-V2-65B** will be released within one day. Stay Tuned!!
 - **[2023.04.22]** We have released **LLaMA-Adapter V2**, a multi-modal instruction model! Check out our  [demos](#demos)! The technical report and models are coming soon.
 - **[2023.04.15]** The **Training Code** for LLaMA-7B can now be found in [alpaca finetune v1](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/alpaca_finetuning_v1). 📌
 - **[2023.03.28]** The [paper](https://arxiv.org/pdf/2303.16199.pdf) is available on arXiv.
