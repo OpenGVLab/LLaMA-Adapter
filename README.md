@@ -23,7 +23,7 @@ Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.
 
 ### :tv: YouTube Video
 
-[![YouTube Video](https://img.youtube.com/vi/GAJyWkkSd8M/0.jpg)](https://www.youtube.com/watch?v=GAJyWkkSd8M)
+[![YouTube Video](https://raw.githubusercontent.com/ZrrSkywalker/LLaMA-Adapter/main/docs/youtube.png)](https://www.youtube.com/watch?v=GAJyWkkSd8M)
 
 
 
