@@ -21,6 +21,12 @@ Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.
 
 ## <div id="demos">Demos (LLaMA-Adapter V2)</div>
 
+### :tv: YouTube Video
+
+[![YouTube Video](https://img.youtube.com/vi/GAJyWkkSd8M/0.jpg)](https://www.youtube.com/watch?v=GAJyWkkSd8M)
+
+
+
 ### Chatbot System
 
 ![](docs/chat_demo.png)
