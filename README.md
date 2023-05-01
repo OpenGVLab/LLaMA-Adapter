@@ -10,7 +10,7 @@ This repo proposes **LLaMA-Adapter**, a lightweight adaption method for fine-tun
 Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/csuhan/LLaMA-Adapter)
 
 ## News
-
+- **[2023.04.30]** The technical report for **LLaMA-Adapter V2** is released at [Preprint](https://arxiv.org/abs/2304.15010).
 - **[2023.04.28]** 🔥🔥 The code and model checkpoint for **LLaMA-Adapter-V2-65B** are NOW available [here](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/llama_adapter_v2_chat65b)! Cheers!!
 - **[2023.04.22]** We have released **LLaMA-Adapter V2**, a multi-modal instruction model! Check out our [demos](#demos) and [paper](https://github.com/ZrrSkywalker/LLaMA-Adapter/blob/main/LLaMA-Adapter-V2-arXiv.pdf)!
 - **[2023.04.15]** The **Training Code** for LLaMA-7B can now be found in [alpaca finetune v1](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/alpaca_finetuning_v1). 📌
