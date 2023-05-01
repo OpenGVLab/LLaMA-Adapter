@@ -1,6 +1,6 @@
 # LLaMA-Adapter: Efficient Fine-tuning of LLaMA 🚀
 
-Official implementation of ['LLaMA-Adapter: Efficient Fine-tuning of Language Models with Zero-init Attention'](https://arxiv.org/abs/2303.16199).
+Official implementation of ['LLaMA-Adapter: Efficient Fine-tuning of Language Models with Zero-init Attention'](https://arxiv.org/abs/2303.16199) and ['LLaMA-Adapter V2: Parameter-Efficient Visual Instruction Model'](https://arxiv.org/pdf/2304.15010.pdf).
 
 <p align="center">                                                                                                                                          <img src="docs/logo_v3.png"/ width="70%"> <br>
 </p>
