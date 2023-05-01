@@ -2,7 +2,7 @@
 
 Official implementation of ['LLaMA-Adapter: Efficient Fine-tuning of Language Models with Zero-init Attention'](https://arxiv.org/abs/2303.16199).
 
-<p align="center">                                                                                                                                          <img src="docs/logo_v2.png"/ width="70%"> <br>
+<p align="center">                                                                                                                                          <img src="docs/logo_v3.png"/ width="70%"> <br>
 </p>
 
 This repo proposes **LLaMA-Adapter**, a lightweight adaption method for fine-tuning instruction-following [LLaMA](https://github.com/facebookresearch/llama) models 🔥, using 52K data provided by [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca).
