@@ -337,7 +337,8 @@ If you find our LLaMA-Adapter code and paper useful, please kindly cite:
   journal={arXiv preprint arXiv:2303.16199},
   year={2023}
 }
-  
+``` 
+ 
 If you find our LLaMA-Adapter V2 code and paper useful, please kindly cite:
 ```bash
 @article{gao2023llamaadapterv2,
