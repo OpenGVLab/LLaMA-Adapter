@@ -347,7 +347,6 @@ If you find our LLaMA-Adapter V2 code and paper useful, please kindly cite:
   journal={arXiv preprint arXiv:2304.15010},
   year={2023}
 }
-}
 ```
 
 ## Acknowledgement
