@@ -1,0 +1,36 @@
+[build-system]
+requires = [
+    "setuptools",
+    "wheel",
+]
+
+[tool.black]
+line-length = 120
+ignore = "E203"
+
+[tool.isort]
+profile = "black"
+line_length = 120
+force_sort_within_sections = "False"
+order_by_type = "False"
+
+[tool.ruff]
+line-length = 120
+# Enable Pyflakes `E` and `F` codes by default.
+select = [
+    "E", "W",  # see: https://pypi.org/project/pycodestyle
+    "F",  # see: https://pypi.org/project/pyflakes
+]
+ignore = [
+    "E731",
+]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".git",
+    "docs"
+]
+ignore-init-module-imports = true
+
+[tool.ruff.mccabe]
+# Unlike Flake8, default to a complexity level of 10.
+max-complexity = 10

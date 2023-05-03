@@ -5,8 +5,8 @@ from typing import List
 
 import torch
 
-from llama.tokenizer import Tokenizer
 from llama.model import Transformer
+from llama.tokenizer import Tokenizer
 
 
 class LLaMA:
@@ -26,7 +26,7 @@ class LLaMA:
         self.model.enable_cache()
 
         prompt_tokens = [self.tokenizer.encode(x, bos=True, eos=False) for x in prompts]
-        prompt_tokens = [x[-(2048 - max_gen_len):] for x in prompt_tokens]
+        prompt_tokens = [x[-(2048 - max_gen_len) :] for x in prompt_tokens]
 
         min_prompt_size = min([len(t) for t in prompt_tokens])
         max_prompt_size = max([len(t) for t in prompt_tokens])
@@ -48,9 +48,7 @@ class LLaMA:
                 next_token = torch.argmax(logits, dim=-1)
             next_token = next_token.reshape(-1)
             # only replace token if prompt has already been generated
-            next_token = torch.where(
-                input_text_mask[:, cur_pos], tokens[:, cur_pos], next_token
-            )
+            next_token = torch.where(input_text_mask[:, cur_pos], tokens[:, cur_pos], next_token)
             tokens[:, cur_pos] = next_token
             prev_pos = cur_pos
 
@@ -59,7 +57,7 @@ class LLaMA:
         decoded = []
         for i, t in enumerate(tokens.tolist()):
             # cut to max gen len
-            t = t[len(prompt_tokens[i]): len(prompt_tokens[i]) + max_gen_len]
+            t = t[len(prompt_tokens[i]) : len(prompt_tokens[i]) + max_gen_len]
             # cut to eos tok if any
             try:
                 t = t[: t.index(self.tokenizer.eos_id)]
