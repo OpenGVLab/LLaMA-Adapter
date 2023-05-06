@@ -1,20 +1,19 @@
 # Copyright (c) Meta Platforms, Inc. and affiliates.
 # This software may be used and distributed according to the terms of the GNU General Public License version 3.
 
-from typing import Tuple
+import json
 import os
 import sys
-import torch
-import fire
 import time
-import json
-
 from pathlib import Path
+from typing import Tuple
 
+import fire
+import torch
 from fairscale.nn.model_parallel.initialize import initialize_model_parallel
 
-from llama import ModelArgs, Transformer, Tokenizer, LLaMA
-import pdb
+from llama import LLaMA, ModelArgs, Tokenizer, Transformer
+
 PROMPT_DICT = {
     "prompt_input": (
         "Below is an instruction that describes a task, paired with an input that provides further context. "
@@ -27,6 +26,7 @@ PROMPT_DICT = {
         "### Instruction:\n{instruction}\n\n### Response:"
     ),
 }
+
 
 def setup_model_parallel() -> Tuple[int, int]:
     local_rank = int(os.environ.get("LOCAL_RANK", -1))
@@ -62,10 +62,8 @@ def load(
     with open(Path(ckpt_dir) / "params.json", "r") as f:
         params = json.loads(f.read())
 
-    model_args: ModelArgs = ModelArgs(
-        max_seq_len=max_seq_len, max_batch_size=max_batch_size, **params
-    )
-    model_args.adapter_layer = int(adapter_checkpoint['adapter_query.weight'].shape[0] / model_args.adapter_len)
+    model_args: ModelArgs = ModelArgs(max_seq_len=max_seq_len, max_batch_size=max_batch_size, **params)
+    model_args.adapter_layer = int(adapter_checkpoint["adapter_query.weight"].shape[0] / model_args.adapter_len)
     tokenizer = Tokenizer(model_path=tokenizer_path)
     model_args.vocab_size = tokenizer.n_words
     torch.set_default_tensor_type(torch.cuda.HalfTensor)
@@ -91,24 +89,21 @@ def main(
     if local_rank > 0:
         sys.stdout = open(os.devnull, "w")
 
-    generator = load(
-        ckpt_dir, tokenizer_path, adapter_path, local_rank, world_size, max_seq_len, max_batch_size
-    )
+    generator = load(ckpt_dir, tokenizer_path, adapter_path, local_rank, world_size, max_seq_len, max_batch_size)
     instructs = [
         "Tell me about alpacas.",
         "Tell me about the president of Mexico in 2019.",
         "Tell me about the king of France in 2019.",
         "List all Canadian provinces in alphabetical order.",
         "Write a Python program that prints the first 10 Fibonacci numbers.",
-        "Write a program that prints the numbers from 1 to 100. But for multiples of three print 'Fizz' instead of the number and for the multiples of five print 'Buzz'. For numbers which are multiples of both three and five print 'FizzBuzz'.",
+        "Write a program that prints the numbers from 1 to 100. But for multiples of three print 'Fizz' instead of the number and for the multiples of five print 'Buzz'. For numbers which are multiples of both three and five print 'FizzBuzz'.",  # noqa: E501
         "Tell me five words that rhyme with 'shock'.",
         "Translate the sentence 'I have no mouth but I must scream' into Spanish.",
-        "Count up from 1 to 500."]
-    prompts = [PROMPT_DICT['prompt_no_input'].format_map({'instruction':x, 'input': ''}) for x in instructs]
+        "Count up from 1 to 500.",
+    ]
+    prompts = [PROMPT_DICT["prompt_no_input"].format_map({"instruction": x, "input": ""}) for x in instructs]
 
-    results = generator.generate(
-        prompts, max_gen_len=512, temperature=temperature, top_p=top_p
-    )
+    results = generator.generate(prompts, max_gen_len=512, temperature=temperature, top_p=top_p)
 
     for result in results:
         print(result)

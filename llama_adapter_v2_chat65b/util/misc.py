@@ -12,10 +12,10 @@
 import builtins
 import datetime
 import os
+import subprocess
 import time
 from collections import defaultdict, deque
 from pathlib import Path
-import subprocess
 
 import torch
 import torch.distributed as dist
@@ -46,7 +46,7 @@ class SmoothedValue(object):
         """
         if not is_dist_avail_and_initialized():
             return
-        t = torch.tensor([self.count, self.total], dtype=torch.float64, device='cuda')
+        t = torch.tensor([self.count, self.total], dtype=torch.float64, device="cuda")
         dist.barrier()
         dist.all_reduce(t)
         t = t.tolist()
@@ -77,11 +77,8 @@ class SmoothedValue(object):
 
     def __str__(self):
         return self.fmt.format(
-            median=self.median,
-            avg=self.avg,
-            global_avg=self.global_avg,
-            max=self.max,
-            value=self.value)
+            median=self.median, avg=self.avg, global_avg=self.global_avg, max=self.max, value=self.value
+        )
 
 
 class MetricLogger(object):
@@ -103,15 +100,12 @@ class MetricLogger(object):
             return self.meters[attr]
         if attr in self.__dict__:
             return self.__dict__[attr]
-        raise AttributeError("'{}' object has no attribute '{}'".format(
-            type(self).__name__, attr))
+        raise AttributeError("'{}' object has no attribute '{}'".format(type(self).__name__, attr))
 
     def __str__(self):
         loss_str = []
         for name, meter in self.meters.items():
-            loss_str.append(
-                "{}: {}".format(name, str(meter))
-            )
+            loss_str.append("{}: {}".format(name, str(meter)))
         return self.delimiter.join(loss_str)
 
     def synchronize_between_processes(self):
@@ -124,22 +118,15 @@ class MetricLogger(object):
     def log_every(self, iterable, print_freq, header=None):
         i = 0
         if not header:
-            header = ''
+            header = ""
         start_time = time.time()
         end = time.time()
-        iter_time = SmoothedValue(fmt='{avg:.4f}')
-        data_time = SmoothedValue(fmt='{avg:.4f}')
-        space_fmt = ':' + str(len(str(len(iterable)))) + 'd'
-        log_msg = [
-            header,
-            '[{0' + space_fmt + '}/{1}]',
-            'eta: {eta}',
-            '{meters}',
-            'time: {time}',
-            'data: {data}'
-        ]
+        iter_time = SmoothedValue(fmt="{avg:.4f}")
+        data_time = SmoothedValue(fmt="{avg:.4f}")
+        space_fmt = ":" + str(len(str(len(iterable)))) + "d"
+        log_msg = [header, "[{0" + space_fmt + "}/{1}]", "eta: {eta}", "{meters}", "time: {time}", "data: {data}"]
         if torch.cuda.is_available():
-            log_msg.append('max mem: {memory:.0f}')
+            log_msg.append("max mem: {memory:.0f}")
         log_msg = self.delimiter.join(log_msg)
         MB = 1024.0 * 1024.0
         for obj in iterable:
@@ -150,22 +137,28 @@ class MetricLogger(object):
                 eta_seconds = iter_time.global_avg * (len(iterable) - i)
                 eta_string = str(datetime.timedelta(seconds=int(eta_seconds)))
                 if torch.cuda.is_available():
-                    print(log_msg.format(
-                        i, len(iterable), eta=eta_string,
-                        meters=str(self),
-                        time=str(iter_time), data=str(data_time),
-                        memory=torch.cuda.max_memory_allocated() / MB))
+                    print(
+                        log_msg.format(
+                            i,
+                            len(iterable),
+                            eta=eta_string,
+                            meters=str(self),
+                            time=str(iter_time),
+                            data=str(data_time),
+                            memory=torch.cuda.max_memory_allocated() / MB,
+                        )
+                    )
                 else:
-                    print(log_msg.format(
-                        i, len(iterable), eta=eta_string,
-                        meters=str(self),
-                        time=str(iter_time), data=str(data_time)))
+                    print(
+                        log_msg.format(
+                            i, len(iterable), eta=eta_string, meters=str(self), time=str(iter_time), data=str(data_time)
+                        )
+                    )
             i += 1
             end = time.time()
         total_time = time.time() - start_time
         total_time_str = str(datetime.timedelta(seconds=int(total_time)))
-        print('{} Total time: {} ({:.4f} s / it)'.format(
-            header, total_time_str, total_time / len(iterable)))
+        print("{} Total time: {} ({:.4f} s / it)".format(header, total_time_str, total_time / len(iterable)))
 
 
 def setup_for_distributed(is_master):
@@ -175,10 +168,10 @@ def setup_for_distributed(is_master):
     builtin_print = builtins.print
 
     def print(*args, **kwargs):
-        force = kwargs.pop('force', False)
+        force = kwargs.pop("force", False)
         if is_master or force:
             now = datetime.datetime.now().time()
-            builtin_print('[{}] '.format(now), end='')  # print with time stamp
+            builtin_print("[{}] ".format(now), end="")  # print with time stamp
             builtin_print(*args, **kwargs)
 
     builtins.print = print
@@ -214,29 +207,32 @@ def save_on_master(*args, **kwargs):
 
 
 def init_distributed_mode():
-    if 'RANK' in os.environ and 'WORLD_SIZE' in os.environ:
+    if "RANK" in os.environ and "WORLD_SIZE" in os.environ:
         # torchrun
         rank = int(os.environ["RANK"])
-        world_size = int(os.environ['WORLD_SIZE'])
-        gpu = int(os.environ['LOCAL_RANK'])
-    elif 'SLURM_PROCID' in os.environ:
+        world_size = int(os.environ["WORLD_SIZE"])
+        gpu = int(os.environ["LOCAL_RANK"])
+    elif "SLURM_PROCID" in os.environ:
         # slurm
-        rank = int(os.environ['SLURM_PROCID'])
-        world_size = int(os.environ['SLURM_NPROCS'])
-        if 'MASTER_PORT' not in os.environ:
-            os.environ['MASTER_PORT'] = '8964'
-        os.environ['MASTER_ADDR'] = subprocess.check_output(
-            'scontrol show hostnames "$SLURM_JOB_NODELIST"',
-            shell=True).decode('utf-8').splitlines()[0]
+        rank = int(os.environ["SLURM_PROCID"])
+        world_size = int(os.environ["SLURM_NPROCS"])
+        if "MASTER_PORT" not in os.environ:
+            os.environ["MASTER_PORT"] = "8964"
+        os.environ["MASTER_ADDR"] = (
+            subprocess.check_output('scontrol show hostnames "$SLURM_JOB_NODELIST"', shell=True)
+            .decode("utf-8")
+            .splitlines()[0]
+        )
         gpu = rank % torch.cuda.device_count()
     else:
-        print('Only distributed mode is supported but distributed env cannot be initialized. '
-            'Use torchrun --nproc_per_node 1 ... to run on a single gpu.')
+        print(
+            "Only distributed mode is supported but distributed env cannot be initialized. "
+            "Use torchrun --nproc_per_node 1 ... to run on a single gpu."
+        )
 
     torch.cuda.set_device(gpu)
-    print('| distributed init (rank {}), gpu {}'.format(
-        rank, gpu), flush=True)
-    torch.distributed.init_process_group('nccl', world_size=world_size, rank=rank)
+    print("| distributed init (rank {}), gpu {}".format(rank, gpu), flush=True)
+    torch.distributed.init_process_group("nccl", world_size=world_size, rank=rank)
     torch.distributed.barrier()
     setup_for_distributed(rank == 0)
 
@@ -276,12 +272,14 @@ def get_grad_norm_(parameters, norm_type: float = 2.0) -> torch.Tensor:
     parameters = [p for p in parameters if p.grad is not None]
     norm_type = float(norm_type)
     if len(parameters) == 0:
-        return torch.tensor(0.)
+        return torch.tensor(0.0)
     device = parameters[0].grad.device
     if norm_type == inf:
         total_norm = max(p.grad.detach().abs().max().to(device) for p in parameters)
     else:
-        total_norm = torch.norm(torch.stack([torch.norm(p.grad.detach(), norm_type).to(device) for p in parameters]), norm_type)
+        total_norm = torch.norm(
+            torch.stack([torch.norm(p.grad.detach(), norm_type).to(device) for p in parameters]), norm_type
+        )
     return total_norm
 
 
@@ -289,63 +287,62 @@ def save_model(args, epoch, model, model_without_ddp, optimizer, loss_scaler):
     output_dir = Path(args.output_dir)
     epoch_name = str(epoch)
     if loss_scaler is not None:
-        checkpoint_paths = [output_dir / ('checkpoint-%s.pth' % epoch_name)]
+        checkpoint_paths = [output_dir / ("checkpoint-%s.pth" % epoch_name)]
         model_state_dict = model_without_ddp.state_dict()
         for n, p in model_without_ddp.named_parameters():
             if not p.requires_grad:
                 del model_state_dict[n]
         for checkpoint_path in checkpoint_paths:
             to_save = {
-                'model': model_state_dict,
-                'optimizer': optimizer.state_dict(),
-                'epoch': epoch,
-                'scaler': loss_scaler.state_dict(),
-                'args': args,
+                "model": model_state_dict,
+                "optimizer": optimizer.state_dict(),
+                "epoch": epoch,
+                "scaler": loss_scaler.state_dict(),
+                "args": args,
             }
 
             save_on_master(to_save, checkpoint_path)
     else:
-        client_state = {'epoch': epoch}
+        client_state = {"epoch": epoch}
         model.save_checkpoint(save_dir=args.output_dir, tag="checkpoint-%s" % epoch_name, client_state=client_state)
 
 
 def load_model(args, model_without_ddp, optimizer, loss_scaler):
     if args.auto_resume and not args.resume:
-        print('Trying to auto resume...')
+        print("Trying to auto resume...")
         output_dir = Path(args.output_dir)
-        ckpts = output_dir.glob('*.pth')
-        ckpt_iters = [int(x.stem[len('checkpoint-'):]) for x in ckpts]
+        ckpts = output_dir.glob("*.pth")
+        ckpt_iters = [int(x.stem[len("checkpoint-") :]) for x in ckpts]
         ckpt_iters.sort()
-        print('Candidate checkpoints:', [str(Path(args.output_dir) / ('checkpoint-%d.pth' % x)) for x in ckpt_iters])
+        print("Candidate checkpoints:", [str(Path(args.output_dir) / ("checkpoint-%d.pth" % x)) for x in ckpt_iters])
         for x in ckpt_iters[::-1]:
-            ckpt_path = str(Path(args.output_dir) / ('checkpoint-%d.pth' % x))
+            ckpt_path = str(Path(args.output_dir) / ("checkpoint-%d.pth" % x))
             try:
-                torch.load(ckpt_path, map_location='cpu')
+                torch.load(ckpt_path, map_location="cpu")
             except Exception as e:
-                print('Failed to load %s with error:' % ckpt_path, e)
+                print("Failed to load %s with error:" % ckpt_path, e)
                 continue
-            print('Found a valid checkpoint:', ckpt_path)
+            print("Found a valid checkpoint:", ckpt_path)
             args.resume = ckpt_path
             break
-            
+
     if args.resume:
-        if args.resume.startswith('https'):
-            checkpoint = torch.hub.load_state_dict_from_url(
-                args.resume, map_location='cpu', check_hash=True)
+        if args.resume.startswith("https"):
+            checkpoint = torch.hub.load_state_dict_from_url(args.resume, map_location="cpu", check_hash=True)
         else:
-            checkpoint = torch.load(args.resume, map_location='cpu')
-        missing_keys, unexpected_keys = model_without_ddp.load_state_dict(checkpoint['model'], strict=False)
+            checkpoint = torch.load(args.resume, map_location="cpu")
+        missing_keys, unexpected_keys = model_without_ddp.load_state_dict(checkpoint["model"], strict=False)
         assert len(unexpected_keys) == 0
         missing_keys = set(missing_keys)
         for n, p in model_without_ddp.named_parameters():
             if p.requires_grad:
                 assert n not in missing_keys
         print("Resume checkpoint %s" % args.resume)
-        if 'optimizer' in checkpoint and 'epoch' in checkpoint and not (hasattr(args, 'eval') and args.eval):
-            optimizer.load_state_dict(checkpoint['optimizer'])
-            args.start_epoch = checkpoint['epoch'] + 1
-            if 'scaler' in checkpoint:
-                loss_scaler.load_state_dict(checkpoint['scaler'])
+        if "optimizer" in checkpoint and "epoch" in checkpoint and not (hasattr(args, "eval") and args.eval):
+            optimizer.load_state_dict(checkpoint["optimizer"])
+            args.start_epoch = checkpoint["epoch"] + 1
+            if "scaler" in checkpoint:
+                loss_scaler.load_state_dict(checkpoint["scaler"])
             print("With optim & sched!")
 
 
