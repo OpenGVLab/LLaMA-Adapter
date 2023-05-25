@@ -8,7 +8,7 @@
 ## Setup
 
 * setup up a new conda env and install necessary packages.
-  ```
+  ```bash
   conda create -n llama_adapter_v2 python=3.8 -y
   pip install -r requirements.txt
   ```
@@ -27,7 +27,7 @@
 
 Here is a simple inference script for LLaMA-Adapter V2. The pre-trained model will be downloaded directly from [Github Release](https://github.com/ZrrSkywalker/LLaMA-Adapter/releases/tag/v.2.0.0).
 
-```
+```python
 import cv2
 import llama
 import torch
@@ -53,14 +53,14 @@ print(result)
 We provide an online demo at [OpenGVLab](http://llama-adapter.opengvlab.com).
 
 You can also start it locally with:
-```
+```bash
 python gradio_app.py
 ```
 
 ## Models
 
 You can check our models by running:
-```
+```python
 import llama
 print(llama.available_models())
 ```
