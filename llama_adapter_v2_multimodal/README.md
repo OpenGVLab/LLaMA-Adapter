@@ -39,7 +39,7 @@ llama_dir = "/path/to/LLaMA/"
 
 model, preprocess = llama.load("BIAS-7B", llama_dir, device)
 
-prompt = llama.format_prompt('Please introduce this painting.')
+prompt = llama.format_prompt("Please introduce this painting.")
 img = Image.fromarray(cv2.imread("../docs/logo_v1.png"))
 img = preprocess(img).unsqueeze(0).to(device)
 
