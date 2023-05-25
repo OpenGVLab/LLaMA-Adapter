@@ -65,4 +65,4 @@ import llama
 print(llama.available_models())
 ```
 
-Now we provide 'BIAS-7B', which fine-tunes the `bias` and `norm` parameters of LLaMA. We will include more pretrained models in the future, such as the LoRA fine-tuning model `LoRA-7B` and partial-tuning model `PARTIAL-7B`.
+Now we provide `BIAS-7B`, which fine-tunes the `bias` and `norm` parameters of LLaMA. We will include more pretrained models in the future, such as the LoRA fine-tuning model `LoRA-7B` and partial-tuning model `PARTIAL-7B`.
