@@ -48,7 +48,7 @@ result = model.generate(img, [prompt])[0]
 print(result)
 ```
 
-## Online demo.
+## Online demo
 
 We provide an online demo at [OpenGVLab](http://llama-adapter.opengvlab.com).
 
