@@ -48,6 +48,12 @@ result = model.generate(img, [prompt])[0]
 print(result)
 ```
 
+The output will look like the following:
+```
+The painting features a cute white lama, or llama, standing on a wooden floor. The llama is holding a variety of tools and accessories, such as a paintbrush, a pencil, a ruler, a pair of scissors, and a paint can. The llama is dressed in a suit, which adds a touch of sophistication to the scene. The painting is a creative and whimsical representation of a person or animal holding various tools and accessories, making it an interesting and unique piece of art.
+```
+
+
 ## Online demo
 
 We provide an online demo at [OpenGVLab](http://llama-adapter.opengvlab.com).
