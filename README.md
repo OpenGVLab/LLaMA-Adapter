@@ -10,6 +10,7 @@ This repo proposes **LLaMA-Adapter (V2)**, a lightweight adaption method for fin
 Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/csuhan/LLaMA-Adapter) and [LLaMA-Adapter V2](http://llama-adapter.opengvlab.com/)
 
 ## News
+- **[2023.05.29]** We release the code of ImageBind-LLM at [imagebind_LLM](imagebind_LLM).
 - **[2023.05.26]** We release the code of multi-modal LLaMA-Adapter V2 at [llama_adapter_v2_multimodal](llama_adapter_v2_multimodal).
 - **[2023.05.23]** We release the web demo of LLaMA-Adapter V2. Check out our demo at [OpenGVLab](http://llama-adapter.opengvlab.com/)!
 - **[2023.05.05]** We release the paper and code of our new work [Personalize Segment Anything](https://github.com/ZrrSkywalker/Personalize-SAM) 🔥🔥🔥, which efficiently fine-tunes Segment Anything with **10 seconds**, and improves DreamBooth for better **text-to-image generation**. 
