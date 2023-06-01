@@ -10,15 +10,12 @@ This repo proposes **LLaMA-Adapter (V2)**, a lightweight adaption method for fin
 Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/csuhan/LLaMA-Adapter) and [LLaMA-Adapter V2](http://llama-adapter.opengvlab.com/)
 
 ## News
-- **[2023.05.29]** We release the code of ImageBind-LLM at [imagebind_LLM](imagebind_LLM).
-- **[2023.05.26]** We release the code of multi-modal LLaMA-Adapter V2 at [llama_adapter_v2_multimodal](llama_adapter_v2_multimodal).
-- **[2023.05.23]** We release the web demo of LLaMA-Adapter V2. Check out our demo at [OpenGVLab](http://llama-adapter.opengvlab.com/)!
+- **[2023.05.29]** We release the code of ImageBind-LLM at [imagebind_LLM](imagebind_LLM) 🔥🔥🔥.
+- **[2023.05.23]** We release the [demos](http://llama-adapter.opengvlab.com/) and [multi-modal code](llama_adapter_v2_multimodal) of LLaMA-Adapter V2!
 - **[2023.05.05]** We release the paper and code of our new work [Personalize Segment Anything](https://github.com/ZrrSkywalker/Personalize-SAM) 🔥🔥🔥, which efficiently fine-tunes Segment Anything with **10 seconds**, and improves DreamBooth for better **text-to-image generation**. 
-- **[2023.04.30]** We noticed that GPT-4 evaluation has a strong positional bias in favor of the first response. We will soon update the paper to reveal the position bias. GPT-4 evaluation also shows a potential to automate chatbot assessment, but still requires further research. Great thanks to [Canwen Xu](https://scholar.google.com/citations?user=oopKCDMAAAAJ&hl=en).
-- **[2023.04.30]** The technical report for **LLaMA-Adapter V2** is released at [preprint](https://arxiv.org/abs/2304.15010).
-- **[2023.04.28]** 🔥🔥 We release **LLaMA-Adapter V2 (65B)**, a multi-modal instruction model! Check out our [demos](#demos) and [code](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/llama_adapter_v2_chat65b)!
-- **[2023.04.15]** The **Training Code** for LLaMA-Adapter (7B) can now be found in [alpaca finetune v1](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/alpaca_finetuning_v1). 📌
-- **[2023.03.28]**  The [technical report](https://arxiv.org/pdf/2303.16199.pdf) and generation code for LLaMA-Adapter is released.
+- **[2023.04.30]** We noticed that GPT-4 evaluation has a strong positional bias in favor of the first response. We will soon update the paper to reveal the position bias. Great thanks to [Canwen Xu](https://scholar.google.com/citations?user=oopKCDMAAAAJ&hl=en).
+- **[2023.04.28]** We release **LLaMA-Adapter V2**, a multi-modal instruction model. Check out our [paper](https://arxiv.org/abs/2304.15010), [demos](#demos) and [code](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/llama_adapter_v2_chat65b)!
+- **[2023.03.28]**  The [paper](https://arxiv.org/pdf/2303.16199.pdf) and [training code](https://github.com/ZrrSkywalker/LLaMA-Adapter/tree/main/alpaca_finetuning_v1) for **LLaMA-Adapter V1** are released. 📌
 
 ## <div id="demos">Demos (LLaMA-Adapter V2)</div>
 

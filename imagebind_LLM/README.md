@@ -41,8 +41,8 @@ import llama
 llama_dir = "/path/to/LLaMA/"
 
 model = llama.load("7B", llama_dir)
-input = data.load_and_transform_vision_data(["example_imgs/funny-photo.jpg"], device='cuda')
-results = model.generate(input, [llama.format_prompt("Explain why this image is funny")], input_type="vision")
+input = data.load_and_transform_vision_data(["../docs/logo_v1.png"], device='cuda')
+results = model.generate(input, [llama.format_prompt("Please introduce this painting.")], input_type="vision")
 result = results[0].strip()
 print(result)
 ```
