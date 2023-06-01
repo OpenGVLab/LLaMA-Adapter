@@ -17,7 +17,7 @@ from ImageBind.models import imagebind_model
 class LLaMA_adapter(nn.Module):
     """ Masked Autoencoder with VisionTransformer backbone
     """
-    def __init__(self, llama_ckpt_dir, llama_tokenizer):
+    def __init__(self, llama_ckpt_dir, llama_tokenizer, knn=False):
         super().__init__()
 
         # 1. imagebind and imagebind projector
@@ -65,33 +65,35 @@ class LLaMA_adapter(nn.Module):
         self.prefix_query = nn.Embedding(self.query_layer * self.query_len, model_args.dim)
 
         # 5. knn
-        import faiss
-        self.index = faiss.read_index("/path_to_knn_index/knn.index")
+        self.knn = knn
+        if knn:
+            import faiss
+            self.index = faiss.read_index("/path_to_knn_index/knn.index")
 
-    @torch.inference_mode()
     def forward_visual(self, imgs, input_type):
         visual_feats = self.image_bind({input_type : imgs})[input_type]
         device = visual_feats.device
 
-        # knn
-        top_k = 5
-        retrievel_temp = 100.0
-        alpha = 0.5
+        if self.knn:
+            # knn
+            top_k = 5
+            retrievel_temp = 100.0
+            alpha = 0.5
 
-        visual_feats_ori = visual_feats
-        sims, indices = self.index.search(visual_feats.cpu(), top_k)
-        B = sims.shape[0]
-        prototypes = [self.index.reconstruct(x) for x in indices.reshape(-1, ).tolist()]
-        prototypes = np.vstack(prototypes).reshape(B, top_k, -1)  # [N, top_k, 1024]
-        sims = torch.tensor(sims, device=device)
-        prototypes = torch.tensor(prototypes, device=device)
+            visual_feats_ori = visual_feats
+            sims, indices = self.index.search(visual_feats.cpu(), top_k)
+            B = sims.shape[0]
+            prototypes = [self.index.reconstruct(x) for x in indices.reshape(-1, ).tolist()]
+            prototypes = np.vstack(prototypes).reshape(B, top_k, -1)  # [N, top_k, 1024]
+            sims = torch.tensor(sims, device=device)
+            prototypes = torch.tensor(prototypes, device=device)
 
-        sims = (sims * retrievel_temp).softmax(dim=-1)
-        visual_feats = sims @ prototypes
-        visual_feats = visual_feats / visual_feats.norm(dim=-1, keepdim=True)
+            sims = (sims * retrievel_temp).softmax(dim=-1)
+            visual_feats = sims @ prototypes
+            visual_feats = visual_feats / visual_feats.norm(dim=-1, keepdim=True)
 
-        visual_feats = alpha * visual_feats_ori + (1-alpha) * visual_feats
-        visual_feats = visual_feats / visual_feats.norm(dim=-1, keepdim=True)
+            visual_feats = alpha * visual_feats_ori + (1-alpha) * visual_feats
+            visual_feats = visual_feats / visual_feats.norm(dim=-1, keepdim=True)
 
 
         visual_feats = self.image_bind_proj(visual_feats)
@@ -106,7 +108,7 @@ class LLaMA_adapter(nn.Module):
         return visual_feats
 
     @torch.inference_mode()
-    def forward(self, visual_feats, tokens, start_pos: int):
+    def forward_inference(self, visual_feats, tokens, start_pos: int):
         _bsz, seqlen = tokens.shape
         h = self.llama.tok_embeddings(tokens)
         freqs_cis = self.llama.freqs_cis.to(h.device)
@@ -166,7 +168,7 @@ class LLaMA_adapter(nn.Module):
         prev_pos = 0
         for cur_pos in range(start_pos, total_len):
             with torch.cuda.amp.autocast():
-                logits = self.forward(visual_query, tokens[:, prev_pos:cur_pos], prev_pos)
+                logits = self.forward_inference(visual_query, tokens[:, prev_pos:cur_pos], prev_pos)
             if temperature > 0:
                 probs = torch.softmax(logits / temperature, dim=-1)
                 next_token = sample_top_p(probs, top_p)
@@ -205,7 +207,7 @@ _MODELS = {
 def available_models():
     return list(_MODELS.keys())
 
-def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu", download_root='ckpts'):
+def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu", download_root='ckpts', knn=False):
     if name in _MODELS:
         model_path = _download(_MODELS[name], download_root)
     elif os.path.isfile(name):
@@ -223,7 +225,7 @@ def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu",
     model_cfg = adapter_ckpt.get('config', {})
 
     model = LLaMA_adapter(
-        llama_ckpt_dir, llama_tokenzier_path)
+        llama_ckpt_dir, llama_tokenzier_path, knn=knn)
 
     load_result = model.load_state_dict(adapter_ckpt['model'], strict=False)
     assert len(load_result.unexpected_keys) == 0, f"Unexpected keys: {load_result.unexpected_keys}"
