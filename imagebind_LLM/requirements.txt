@@ -5,3 +5,4 @@ opencv-python
 gradio
 tqdm
 autofaiss
+tensorboard

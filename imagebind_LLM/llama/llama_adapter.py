@@ -48,7 +48,7 @@ class LLaMA_adapter(nn.Module):
             params = json.loads(f.read())
         model_args: ModelArgs = ModelArgs(
             max_seq_len=512, max_batch_size=1, **params
-        )
+        ) # max_batch_size only affects inference
         model_args.vocab_size = self.tokenizer.n_words
         torch.set_default_tensor_type(torch.cuda.HalfTensor)
         self.llama = Transformer(model_args)
@@ -68,31 +68,59 @@ class LLaMA_adapter(nn.Module):
         self.knn = knn
         if knn:
             import faiss
-            self.index = faiss.read_index("/path_to_knn_index/knn.index")
+            self.index = faiss.read_index(_download("https://huggingface.co/csuhan/knn/resolve/main/knn.index", "ckpts"))
 
-    def forward_visual(self, imgs, input_type):
-        visual_feats = self.image_bind({input_type : imgs})[input_type]
+        # 6. training criterion
+        self.criterion = torch.nn.CrossEntropyLoss(ignore_index=0)
+
+        self.set_default_trainability()
+
+    def get_trainable_params(self):
+        trainable = {}
+        for name, para in self.named_parameters():
+            if name.startswith("llama."):
+                if 'norm' in name or 'bias' in name or 'lora' in name:
+                    trainable[name] = para
+            # elif name.startswith("image_bind_"): # not 'image_bind.' so image_bind won't be trained.
+            #     trainable[name] = para
+        return trainable
+
+    def set_default_trainability(self):
+        for key, value in self.named_parameters():
+            value.requires_grad = False
+        for key, value in self.get_trainable_params().items():
+            value.data = value.data.float()
+            value.requires_grad = True
+
+    def forward_visual(self, inputs, cache_size=10, cache_t=20, cache_weight=0.5):
+        outputs = []
+        outputs_weights = []
+        for input_type, (input, input_weight) in inputs.items():
+            if input_type in ['Image', 'Video']:
+                type = 'vision'
+            else:
+                type = input_type.lower()
+            outputs.append(self.image_bind({type : input})[type])
+            outputs_weights.append(input_weight)
+        outputs_weights = [x/(sum(outputs_weights)+1e-6) for x in outputs_weights]
+
+        visual_feats = sum([output*output_weight for output, output_weight in zip(outputs, outputs_weights)])
         device = visual_feats.device
 
         if self.knn:
-            # knn
-            top_k = 5
-            retrievel_temp = 100.0
-            alpha = 0.5
-
             visual_feats_ori = visual_feats
-            sims, indices = self.index.search(visual_feats.cpu(), top_k)
+            sims, indices = self.index.search(visual_feats.cpu(), int(cache_size))
             B = sims.shape[0]
             prototypes = [self.index.reconstruct(x) for x in indices.reshape(-1, ).tolist()]
-            prototypes = np.vstack(prototypes).reshape(B, top_k, -1)  # [N, top_k, 1024]
+            prototypes = np.vstack(prototypes).reshape(B, int(cache_size), -1)  # [N, top_k, 1024]
             sims = torch.tensor(sims, device=device)
             prototypes = torch.tensor(prototypes, device=device)
 
-            sims = (sims * retrievel_temp).softmax(dim=-1)
+            sims = (sims * cache_t).softmax(dim=-1)
             visual_feats = sims @ prototypes
             visual_feats = visual_feats / visual_feats.norm(dim=-1, keepdim=True)
 
-            visual_feats = alpha * visual_feats_ori + (1-alpha) * visual_feats
+            visual_feats = (1-cache_weight) * visual_feats_ori + cache_weight * visual_feats
             visual_feats = visual_feats / visual_feats.norm(dim=-1, keepdim=True)
 
 
@@ -133,23 +161,58 @@ class LLaMA_adapter(nn.Module):
 
         return output.float()
 
+    def forward(self, tokens, labels, imgs):
+        visual_feats = self.forward_visual(imgs, "vision")
+
+        _bsz, seqlen = tokens.shape
+
+        h = self.llama.tok_embeddings(tokens)
+        freqs_cis = self.llama.freqs_cis.to(h.device)
+        freqs_cis = freqs_cis[:seqlen]
+        mask = None
+        mask = torch.full((1, 1, seqlen, seqlen), float("-inf"), device=h.device)
+        mask = torch.triu(mask, diagonal=0 + 1).type_as(h)
+
+        for layer in self.llama.layers[:-1 * self.query_layer]:
+            h = layer(h, 0, freqs_cis, mask)
+        prefix_query = self.prefix_query.weight.reshape(
+            self.query_layer, 1, 4096).unsqueeze(1)
+        prefix_index = 0
+        visual_proj = visual_feats.unsqueeze(1)
+        for layer in self.llama.layers[-1 * self.query_layer:]:
+            h = layer(h, 0, freqs_cis, mask, visual_proj + prefix_query[prefix_index])
+            prefix_index = prefix_index + 1
+
+        h = self.llama.norm(h)
+        output = self.llama.output(h)
+        output = output[:, :-1, :]
+        labels = labels[:, 1:]
+
+        if labels.sum() == 0:
+            c_loss = output.mean() * 0
+        else:
+            c_loss = self.criterion(output.reshape(-1, 32000), labels.flatten())
+
+        return c_loss, c_loss
+
     @torch.inference_mode()
     def generate(
             self,
-            imgs,
+            inputs,
             prompts,
-            input_type,
-            max_gen_len: int = 64,
+            max_gen_len: int = 256,
             temperature: float = 0.1,
             top_p: float = 0.75,
+            cache_size=10,
+            cache_t=20,
+            cache_weight=0.5
     ):
-        bsz = len(imgs)
+        bsz = len(prompts)
         params = self.llama.params
         assert bsz <= params.max_batch_size, (bsz, params.max_batch_size)
-        assert len(imgs) == len(prompts)
 
         with torch.cuda.amp.autocast():
-            visual_query = self.forward_visual(imgs, input_type)
+            visual_query = self.forward_visual(inputs, cache_size, cache_t, cache_weight)
 
         if isinstance(prompts[0], str):
             prompts = [self.tokenizer.encode(x, bos=True, eos=False) for x in prompts]
@@ -201,7 +264,7 @@ class LLaMA_adapter(nn.Module):
 
 
 _MODELS = {
-    "7B": "https://coming_soon.pth",
+    "7B-beta": "https://huggingface.co/Cxxs/ImageBind-LLM/resolve/main/7B-beta.pth",
 }
 
 def available_models():

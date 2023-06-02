@@ -74,6 +74,7 @@ def apply_rotary_emb(
 class Attention(nn.Module):
     def __init__(self, args: ModelArgs):
         super().__init__()
+        self.args = args
 
         self.n_local_heads = args.n_heads
         self.head_dim = args.dim // args.n_heads
@@ -120,14 +121,25 @@ class Attention(nn.Module):
            nn.init.constant_(self.lora_wv_l2.weight.data, 0)
            nn.init.constant_(self.lora_wo_l2.weight.data, 0)
 
-        self.cache_k = torch.zeros(
-            (args.max_batch_size, args.max_seq_len, self.n_local_heads, self.head_dim)
-        ).cuda()
-        self.cache_v = torch.zeros(
-            (args.max_batch_size, args.max_seq_len, self.n_local_heads, self.head_dim)
-        ).cuda()
+        self.cache_k = None
+        self.cache_v = None
 
         self.gate = torch.nn.Parameter(torch.zeros(1, self.n_local_heads, 1, 1))
+
+
+    def train(self, mode: bool = True):
+        if mode:
+            self.cache_k = None
+            self.cache_v = None
+        else:
+            self.cache_k = torch.zeros(
+                (self.args.max_batch_size, self.args.max_seq_len, self.n_local_heads, self.head_dim)
+            ).cuda()
+            self.cache_v = torch.zeros(
+                (self.args.max_batch_size, self.args.max_seq_len, self.n_local_heads, self.head_dim)
+            ).cuda()
+        return super().train(mode)
+
 
     def forward(self, x: torch.Tensor, start_pos: int, freqs_cis: torch.Tensor, mask: Optional[torch.Tensor], adapter=None):
         bsz, seqlen, _ = x.shape
@@ -143,14 +155,19 @@ class Attention(nn.Module):
 
         xq, xk = apply_rotary_emb(xq, xk, freqs_cis=freqs_cis)
 
-        self.cache_k = self.cache_k.to(xq)
-        self.cache_v = self.cache_v.to(xq)
+        if not self.training:
+            self.cache_k = self.cache_k.to(xq)
+            self.cache_v = self.cache_v.to(xq)
 
-        self.cache_k[:bsz, start_pos : start_pos + seqlen] = xk
-        self.cache_v[:bsz, start_pos : start_pos + seqlen] = xv
+            self.cache_k[:bsz, start_pos : start_pos + seqlen] = xk
+            self.cache_v[:bsz, start_pos : start_pos + seqlen] = xv
 
-        keys = self.cache_k[:bsz, : start_pos + seqlen]
-        values = self.cache_v[:bsz, : start_pos + seqlen]
+            keys = self.cache_k[:bsz, : start_pos + seqlen]
+            values = self.cache_v[:bsz, : start_pos + seqlen]
+        else:
+            assert start_pos==0
+            keys = xk
+            values = xv
 
         if adapter is not None:
             adapter_len = adapter.shape[1]
