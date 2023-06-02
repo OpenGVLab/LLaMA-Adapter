@@ -162,7 +162,7 @@ class LLaMA_adapter(nn.Module):
         return output.float()
 
     def forward(self, tokens, labels, imgs):
-        visual_feats = self.forward_visual(imgs, "vision")
+        visual_feats = self.forward_visual({'Image': [imgs, 1]})
 
         _bsz, seqlen = tokens.shape
 

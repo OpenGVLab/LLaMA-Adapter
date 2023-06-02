@@ -34,13 +34,10 @@ transform_train = transforms.Compose([
     transforms.Normalize(mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])])
 
 class CaptionCOCO(Dataset):
-    def __init__(self, transform, max_words=30, partition='train', tokenizer_path=None):
+    def __init__(self, transform, max_words=30, tokenizer_path=None):
         ann = json.load(open('/data1/LLaVA/LLaVA-Instruct-150K/llava_instruct_150k_single_turn.json'))
         ann += json.load(open('/home/pgao/GPT-4-LLM/data/alpaca_gpt4_data.json'))
-        if partition == 'train':
-            self.ann = ann
-        else:
-            self.ann = ann[:5000]
+        self.ann = ann
         self.transform = transform
         self.max_words = max_words
         tokenizer = Tokenizer(model_path=tokenizer_path)
