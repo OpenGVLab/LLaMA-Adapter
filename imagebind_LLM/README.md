@@ -11,7 +11,7 @@
 * Setup up a new conda env. Install ImageBind and other necessary packages.
   ```bash
   # create conda env
-  conda create -n imagebind_LLM python=3.8 -y
+  conda create -n imagebind_LLM python=3.9 -y
   conda activate imagebind_LLM
   # install ImageBind
   cd ImageBind
