@@ -17,6 +17,7 @@ from collections import defaultdict, deque
 from pathlib import Path
 
 import torch
+import torch.utils.data
 import torch.distributed as dist
 from torch._six import inf
 
@@ -313,19 +314,18 @@ def save_model(args, epoch, model, model_without_ddp, optimizer, loss_scaler):
         model.save_checkpoint(save_dir=args.output_dir, tag="checkpoint-%s" % epoch_name, client_state=client_state)
 
 
-def load_model(args, model_without_ddp, optimizer, loss_scaler):
-    if args.resume:
-        if args.resume.startswith('https'):
-            checkpoint = torch.hub.load_state_dict_from_url(
-                args.resume, map_location='cpu', check_hash=True)
-        else:
-            checkpoint = torch.load(args.resume, map_location='cpu')
-        new_checkpoint = {}
-        for key, value in checkpoint['model'].items():
-            key = key.replace("llma", "llama")
-            new_checkpoint[key] = value
-        print(model_without_ddp.load_state_dict(new_checkpoint, strict=False))
-        print("Resume checkpoint %s" % args.resume)
+def load_model(model_without_ddp, path):
+    if path.startswith('https'):
+        checkpoint = torch.hub.load_state_dict_from_url(
+            path, map_location='cpu', check_hash=True)
+    else:
+        checkpoint = torch.load(path, map_location='cpu')
+    new_checkpoint = {}
+    for key, value in checkpoint['model'].items():
+        key = key.replace("llma", "llama")
+        new_checkpoint[key] = value
+    print(model_without_ddp.load_state_dict(new_checkpoint, strict=False))
+    print("Load checkpoint %s" % path)
 
 
 def all_reduce_mean(x):
@@ -352,3 +352,38 @@ def add_weight_decay(model, weight_decay=1e-5, skip_list=()):
     return [
         {'params': no_decay, 'weight_decay': 0.},
         {'params': decay, 'weight_decay': weight_decay}]
+
+
+class DistributedSubEpochSampler(torch.utils.data.Sampler):
+
+    def __init__(self, dataset, num_replicas, rank, shuffle, split_epoch=1, seed=0):
+        self.dataset = dataset
+        self.num_replicas = num_replicas
+        self.rank = rank
+        self.shuffle = shuffle
+        self.split_epoch = split_epoch
+        self.seed = seed
+
+        self.num_samples = len(dataset) // (num_replicas * split_epoch)
+
+    def __len__(self):
+        return self.num_samples
+
+    def __iter__(self):
+        if self.shuffle:
+            # deterministically shuffle based on epoch and seed
+            g = torch.Generator()
+            g.manual_seed(self.seed + self.epoch // self.split_epoch)
+            indices = torch.randperm(len(self.dataset), generator=g).tolist()  # type: ignore[arg-type]
+        else:
+            indices = list(range(len(self.dataset)))  # type: ignore[arg-type]
+
+        indices = indices[self.rank * self.split_epoch + self.epoch % self.split_epoch::self.num_replicas * self.split_epoch]
+        assert len(indices) >= self.num_samples
+        indices = indices[:self.num_samples]
+
+        return iter(indices)
+
+    def set_epoch(self, epoch):
+        self.epoch = epoch
+

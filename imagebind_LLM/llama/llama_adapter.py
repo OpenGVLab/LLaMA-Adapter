@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .llama import Transformer, ModelArgs
+from .llama import Transformer, ModelArgs, RMSNorm
 from .tokenizer import Tokenizer
 from .utils import sample_top_p, _download
 
@@ -17,7 +17,7 @@ from ImageBind.models import imagebind_model
 class LLaMA_adapter(nn.Module):
     """ Masked Autoencoder with VisionTransformer backbone
     """
-    def __init__(self, llama_ckpt_dir, llama_tokenizer, knn=False):
+    def __init__(self, llama_ckpt_dir, llama_tokenizer, knn=False, phase="finetune", legacy_bridge=True):
         super().__init__()
 
         # 1. imagebind and imagebind projector
@@ -25,20 +25,28 @@ class LLaMA_adapter(nn.Module):
 
         self.image_bind_proj = nn.Linear(1024, 4096)
 
-        self.image_bind_norm_1 = nn.LayerNorm(4096)
-        self.image_bind_f1_1 = nn.Linear(4096, 4096 * 4)
-        self.image_bind_f2_1 = nn.Linear(4096 * 4, 4096)
-        self.image_bind_f3_1 = nn.Linear(4096, 4096 * 4)
+        if legacy_bridge:
+            bridge_norm_layer = nn.LayerNorm
+            bridge_bias = True
+        else:
+            bridge_norm_layer = RMSNorm
+            bridge_bias = False
 
-        self.image_bind_norm_2 = nn.LayerNorm(4096)
-        self.image_bind_f1_2 = nn.Linear(4096, 4096 * 4)
-        self.image_bind_f2_2 = nn.Linear(4096 * 4, 4096)
-        self.image_bind_f3_2 = nn.Linear(4096, 4096 * 4)
 
-        self.image_bind_norm_3 = nn.LayerNorm(4096)
-        self.image_bind_f1_3 = nn.Linear(4096, 4096 * 4)
-        self.image_bind_f2_3 = nn.Linear(4096 * 4, 4096)
-        self.image_bind_f3_3 = nn.Linear(4096, 4096 * 4)
+        self.image_bind_norm_1 = bridge_norm_layer(4096)
+        self.image_bind_f1_1 = nn.Linear(4096, 4096 * 4, bias=bridge_bias)
+        self.image_bind_f2_1 = nn.Linear(4096 * 4, 4096, bias=bridge_bias)
+        self.image_bind_f3_1 = nn.Linear(4096, 4096 * 4, bias=bridge_bias)
+
+        self.image_bind_norm_2 = bridge_norm_layer(4096)
+        self.image_bind_f1_2 = nn.Linear(4096, 4096 * 4, bias=bridge_bias)
+        self.image_bind_f2_2 = nn.Linear(4096 * 4, 4096, bias=bridge_bias)
+        self.image_bind_f3_2 = nn.Linear(4096, 4096 * 4, bias=bridge_bias)
+
+        self.image_bind_norm_3 = bridge_norm_layer(4096)
+        self.image_bind_f1_3 = nn.Linear(4096, 4096 * 4, bias=bridge_bias)
+        self.image_bind_f2_3 = nn.Linear(4096 * 4, 4096, bias=bridge_bias)
+        self.image_bind_f3_3 = nn.Linear(4096, 4096 * 4, bias=bridge_bias)
 
         # 2. tokenizer
         self.tokenizer = Tokenizer(model_path=llama_tokenizer)
@@ -46,9 +54,11 @@ class LLaMA_adapter(nn.Module):
         # 3. llama
         with open(os.path.join(llama_ckpt_dir, "params.json"), "r") as f:
             params = json.loads(f.read())
+        bias_lora = phase == "finetune"
         model_args: ModelArgs = ModelArgs(
-            max_seq_len=512, max_batch_size=1, **params
+            max_seq_len=512, max_batch_size=1, w_bias=bias_lora, w_lora=bias_lora,  **params
         ) # max_batch_size only affects inference
+        print(f"model args: {model_args}")
         model_args.vocab_size = self.tokenizer.n_words
         torch.set_default_tensor_type(torch.cuda.HalfTensor)
         self.llama = Transformer(model_args)
@@ -73,22 +83,34 @@ class LLaMA_adapter(nn.Module):
         # 6. training criterion
         self.criterion = torch.nn.CrossEntropyLoss(ignore_index=0)
 
-        self.set_default_trainability()
 
-    def get_trainable_params(self):
+        self.phase = phase
+        self.set_default_trainability(self.phase)
+
+    def get_trainable_params(self, phase='finetune'):
         trainable = {}
-        for name, para in self.named_parameters():
-            if name.startswith("llama."):
-                if 'norm' in name or 'bias' in name or 'lora' in name:
+        if phase == 'finetune':
+            for name, para in self.named_parameters():
+                if name.startswith("llama."):
+                    if 'norm' in name or 'bias' in name or 'lora' in name:
+                        trainable[name] = para
+        elif phase == 'pretrain':
+            for name, para in self.named_parameters():
+                if name.startswith("llama."):
+                    if 'gate' in name:
+                        trainable[name] = para
+                elif name.startswith("image_bind_"):  # not 'image_bind.' so image_bind won't be trained.
                     trainable[name] = para
-            # elif name.startswith("image_bind_"): # not 'image_bind.' so image_bind won't be trained.
-            #     trainable[name] = para
+                elif name.startswith("prefix_query."):
+                    trainable[name] = para
+        else:
+            raise ValueError(f"Unknown model phase: {phase}")
         return trainable
 
-    def set_default_trainability(self):
+    def set_default_trainability(self, phase='finetune'):
         for key, value in self.named_parameters():
             value.requires_grad = False
-        for key, value in self.get_trainable_params().items():
+        for key, value in self.get_trainable_params(phase).items():
             value.data = value.data.float()
             value.requires_grad = True
 
@@ -123,7 +145,7 @@ class LLaMA_adapter(nn.Module):
             visual_feats = (1-cache_weight) * visual_feats_ori + cache_weight * visual_feats
             visual_feats = visual_feats / visual_feats.norm(dim=-1, keepdim=True)
 
-
+        visual_feats = visual_feats.unsqueeze(1) # B, 1, D
         visual_feats = self.image_bind_proj(visual_feats)
         visual_feats_norm = self.image_bind_norm_1(visual_feats)
         visual_feats = visual_feats + self.image_bind_f2_1(F.silu(self.image_bind_f1_1(visual_feats_norm)) * self.image_bind_f3_1(visual_feats_norm))
@@ -151,7 +173,7 @@ class LLaMA_adapter(nn.Module):
         prefix_query = self.prefix_query.weight.reshape(
             self.query_layer, 1, 4096).unsqueeze(1)
         prefix_index = 0
-        visual_proj = visual_feats.unsqueeze(1)
+        visual_proj = visual_feats # B, 1, D
         for layer in self.llama.layers[-1 * self.query_layer:]:
             h = layer(h, start_pos, freqs_cis, mask, visual_proj + prefix_query[prefix_index].repeat(_bsz, 1, 1))
             prefix_index = prefix_index + 1
@@ -178,7 +200,7 @@ class LLaMA_adapter(nn.Module):
         prefix_query = self.prefix_query.weight.reshape(
             self.query_layer, 1, 4096).unsqueeze(1)
         prefix_index = 0
-        visual_proj = visual_feats.unsqueeze(1)
+        visual_proj = visual_feats
         for layer in self.llama.layers[-1 * self.query_layer:]:
             h = layer(h, 0, freqs_cis, mask, visual_proj + prefix_query[prefix_index])
             prefix_index = prefix_index + 1
@@ -191,7 +213,8 @@ class LLaMA_adapter(nn.Module):
         if labels.sum() == 0:
             c_loss = output.mean() * 0
         else:
-            c_loss = self.criterion(output.reshape(-1, 32000), labels.flatten())
+            assert self.llama.vocab_size == 32000
+            c_loss = self.criterion(output.reshape(-1, self.llama.vocab_size), labels.flatten())
 
         return c_loss, c_loss
 
@@ -270,7 +293,8 @@ _MODELS = {
 def available_models():
     return list(_MODELS.keys())
 
-def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu", download_root='ckpts', knn=False):
+def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu", download_root='ckpts',
+         knn=False, llama_type="7B", phase="finetune"):
     if name in _MODELS:
         model_path = _download(_MODELS[name], download_root)
     elif os.path.isfile(name):
@@ -278,7 +302,6 @@ def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu",
     else:
         return RuntimeError(f"Model {name} not found; available models = {available_models()}")
 
-    llama_type = "7B"
     llama_ckpt_dir = os.path.join(llama_dir, llama_type)
     llama_tokenzier_path = os.path.join(llama_dir, 'tokenizer.model')
 
@@ -288,7 +311,7 @@ def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu",
     model_cfg = adapter_ckpt.get('config', {})
 
     model = LLaMA_adapter(
-        llama_ckpt_dir, llama_tokenzier_path, knn=knn)
+        llama_ckpt_dir, llama_tokenzier_path, knn=knn, phase=phase)
 
     load_result = model.load_state_dict(adapter_ckpt['model'], strict=False)
     assert len(load_result.unexpected_keys) == 0, f"Unexpected keys: {load_result.unexpected_keys}"

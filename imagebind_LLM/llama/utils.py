@@ -32,7 +32,7 @@ def format_prompt(instruction, input=None):
             "### Instruction:\n{instruction}\n\n### Response:"
         ),
     }
-    if input is None:
+    if input is None or input=='':
         return PROMPT_DICT['prompt_no_input'].format_map({'instruction': instruction})
     else:
         return PROMPT_DICT["prompt_input"].format_map({'instruction': instruction, 'input': input})
@@ -60,3 +60,5 @@ def _download(url: str, root: str):
 
 
     return download_target
+
+

@@ -7,7 +7,7 @@ import util.misc as misc
 from util.misc import NativeScalerWithGradNormCount as NativeScaler
 from llama.llama_adapter import LLaMA_adapter
 
-from data.dataset import FinetuneDataset, transform_train
+from data.dataset import PretrainDataset, transform_train
 
 import argparse
 import datetime
@@ -17,7 +17,7 @@ import os
 import time
 from pathlib import Path
 
-from engine_finetune import train_one_epoch
+from engine_pretrain import train_one_epoch
 
 
 def get_args_parser():
@@ -33,10 +33,8 @@ def get_args_parser():
                         help='Type of LLaMA model') #
     parser.add_argument('--llama_path', default='/path/to/llama', type=str,
                         help='path to LLaMA pretrained checkpoint')
-    parser.add_argument('--pretrained_path', default='/path/to/pretrained', type=str,
-                        help='path to checkpoint from pretrain stage')
-    parser.add_argument('--max_words', default=512, type=int,
-                        help='max number of input words')
+    parser.add_argument('--max_words', default=96, type=int,
+                        help='max number of input words') # todo
 
     # Optimizer parameters
     parser.add_argument('--weight_decay', type=float, default=0.05,
@@ -53,7 +51,7 @@ def get_args_parser():
                         help='epochs to warmup LR')
 
     # Dataset parameters
-    parser.add_argument('--data_config', default='configs/data/finetune/EN.yaml', type=str,
+    parser.add_argument('--data_config', default='configs/data/pretrain/EN.yaml', type=str,
                         help='dataset config path')
     parser.add_argument('--num_workers', default=10, type=int)
     parser.add_argument('--pin_mem', action='store_true',
@@ -70,7 +68,6 @@ def get_args_parser():
                         help='device to use for training / testing')
     parser.add_argument('--seed', default=0, type=int)
 
-
     parser.add_argument('--start_epoch', default=0, type=int, metavar='N',
                         help='start epoch')
 
@@ -81,6 +78,8 @@ def get_args_parser():
     parser.add_argument('--dist_on_itp', action='store_true')
     parser.add_argument('--dist_url', default='env://',
                         help='url used to set up distributed training')
+
+    parser.add_argument('--split_epoch', type=int, default=50)
 
     return parser
 
@@ -103,7 +102,7 @@ def main(args):
     llama_type = args.llama_type
     llama_ckpt_dir = os.path.join(args.llama_path, llama_type)
     llama_tokenzier_path = os.path.join(args.llama_path, 'tokenizer.model')
-    model = LLaMA_adapter(llama_ckpt_dir, llama_tokenzier_path)
+    model = LLaMA_adapter(llama_ckpt_dir, llama_tokenzier_path, knn=False, phase="pretrain")
 
     model.to(device)
 
@@ -135,16 +134,15 @@ def main(args):
     print(optimizer)
     loss_scaler = NativeScaler()
 
-    misc.load_model(model_without_ddp, args.pretrained_path)
 
 
-    dataset_train = FinetuneDataset(args.data_config, transform=transform_train,
+    dataset_train = PretrainDataset(args.data_config, transform=transform_train,
                                 max_words=args.max_words, tokenizer_path=llama_tokenzier_path)
     print(dataset_train)
     num_tasks = misc.get_world_size()
     global_rank = misc.get_rank()
-    sampler_train = torch.utils.data.DistributedSampler(
-        dataset_train, num_replicas=num_tasks, rank=global_rank, shuffle=True
+    sampler_train = misc.DistributedSubEpochSampler(
+        dataset_train, num_replicas=num_tasks, rank=global_rank, split_epoch=args.split_epoch, shuffle=True
     )
     print("Sampler_train = %s" % str(sampler_train))
 
@@ -177,14 +175,13 @@ def main(args):
             args=args
         )
 
-        if args.output_dir and (epoch % 5 == 0 or epoch + 1 == args.epochs):
+        if args.output_dir and (epoch % 2 == 0 or epoch + 1 == args.epochs):
             misc.save_model(
                 args=args, model=model, model_without_ddp=model_without_ddp, optimizer=optimizer,
                 loss_scaler=loss_scaler, epoch=epoch)
 
         log_stats = {**{f'train_{k}': v for k, v in train_stats.items()},
-                     'epoch': epoch,
-                     **{f'val_{k}': v for k, v in train_stats.items()}}
+                     'epoch': epoch}
 
         if args.output_dir and misc.is_main_process():
             if log_writer is not None:

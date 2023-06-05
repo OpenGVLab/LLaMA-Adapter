@@ -14,12 +14,16 @@ parser.add_argument(
     help="Name of or path to LLaMAAdapter pretrained checkpoint",
 )
 parser.add_argument(
+    "--llama_type", default="7B", type=str,
+    help="Type of llama",
+)
+parser.add_argument(
     "--llama_dir", default="/path/to/llama", type=str,
     help="Path to LLaMA pretrained checkpoint",
 )
 args = parser.parse_args()
 
-model = llama.load(args.model, args.llama_dir, knn=True)
+model = llama.load(args.model, args.llama_dir, knn=True, llama_type=args.llama_type)
 model.eval()
 
 
@@ -34,6 +38,7 @@ def multimodal_generate(
         audio_path,
         audio_weight,
         prompt,
+        question_input,
         cache_size,
         cache_t,
         cache_weight,
@@ -73,7 +78,7 @@ def multimodal_generate(
         audio = data.load_and_transform_audio_data([audio_path], device='cuda')
         inputs['Audio'] = [audio, audio_weight]
 
-    prompts = [llama.format_prompt(prompt)]
+    prompts = [llama.format_prompt(prompt, question_input)]
 
     prompts = [model.tokenizer.encode(x, bos=True, eos=False) for x in prompts]
     with torch.cuda.amp.autocast():
@@ -105,6 +110,8 @@ def create_imagebind_llm_demo():
             with gr.Column():
                 with gr.Row():
                     prompt = gr.Textbox(lines=2, label="Question")
+                with gr.Row():
+                    question_input = gr.Textbox(lines=2, label="Question Input (Optional)")
                 with gr.Row():
                     cache_size = gr.Slider(minimum=1, maximum=100, value=10, interactive=True, label="Cache Size")
                     cache_t = gr.Slider(minimum=0.0, maximum=100, value=20, interactive=True, label="Cache Temperature")
@@ -146,7 +153,7 @@ def create_imagebind_llm_demo():
         text_path, text_weight,
         video_path, video_weight,
         audio_path, audio_weight,
-        prompt,
+        prompt, question_input,
         cache_size, cache_t, cache_weight,
         max_gen_len, gen_t, top_p
     ]
@@ -170,5 +177,6 @@ description = """
 with gr.Blocks(css='style.css') as demo:
     gr.Markdown(description)
     create_imagebind_llm_demo()
+
 
 demo.queue(api_open=True, concurrency_count=1).launch(share=True)

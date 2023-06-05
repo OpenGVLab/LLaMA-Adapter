@@ -1,15 +1,13 @@
 #!/usr/bin/bash
 
 LLAMA_PATH="$1"
-PRETRAINED_PATH="$2" # path to pre-trained checkpoint
-OUTPUT_DIR="$3"
+OUTPUT_DIR="$2"
 
 mkdir -p "$OUTPUT_DIR"
 
 python -u -m torch.distributed.launch --master_port=1112 --nproc_per_node=8 --use_env \
- main_finetune.py --batch_size 4 \
- --epochs 4 --warmup_epochs 1 --blr 10e-4 --weight_decay 0.02 \
+ main_pretrain.py --batch_size 4 \
+ --epochs 150 --split_epoch 50 --warmup_epochs 5 --blr 1.0e-4 --weight_decay 0.05 \
  --llama_path "$LLAMA_PATH" \
  --output_dir "$OUTPUT_DIR" \
- --pretrained_path "$PRETRAINED_PATH" \
  &>> "$OUTPUT_DIR"/output.log &
