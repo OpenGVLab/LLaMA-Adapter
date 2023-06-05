@@ -160,6 +160,16 @@ def load_and_transform_audio_data(
 
     return torch.stack(audio_outputs, dim=0)
 
+def load_and_transform_point_cloud_data(point_paths, device):
+    point_outputs = []
+
+    for point_path in point_paths:
+        if type(point_path) != str:
+            point_path = point_path.name
+        point = torch.load(point_path).to(device)
+        point_outputs.append(point)
+        
+    return torch.stack(point_outputs, dim=0)
 
 def crop_boxes(boxes, x_offset, y_offset):
     """
