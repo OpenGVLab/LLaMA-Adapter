@@ -51,7 +51,7 @@ def multimodal_generate(
         cache_t,
         cache_weight,
         max_gen_len,
-        gen_t, top_p
+        gen_t, top_p, output_type
 ):
     if len(modality) == 0:
         raise gr.Error('Please select at least one modality!')
@@ -95,20 +95,24 @@ def multimodal_generate(
 
     image_prompt = prompt # image use original prompt
 
-    # text output
-    prompts = [llama.format_prompt(prompt, question_input)]
+    text_output = None
+    image_output = None
+    if output_type == "Text":
+        # text output
+        prompts = [llama.format_prompt(prompt, question_input)]
 
-    prompts = [model.tokenizer.encode(x, bos=True, eos=False) for x in prompts]
-    with torch.cuda.amp.autocast():
-        results = model.generate(inputs, prompts, max_gen_len=max_gen_len, temperature=gen_t, top_p=top_p,
-                                     cache_size=cache_size, cache_t=cache_t, cache_weight=cache_weight)
-    text_output = results[0].strip()
-    print(text_output)
+        prompts = [model.tokenizer.encode(x, bos=True, eos=False) for x in prompts]
+        with torch.cuda.amp.autocast():
+            results = model.generate(inputs, prompts, max_gen_len=max_gen_len, temperature=gen_t, top_p=top_p,
+                                         cache_size=cache_size, cache_t=cache_t, cache_weight=cache_weight)
+        text_output = results[0].strip()
+        print(text_output)
 
-    # image output
-    image = image_generate(inputs, model, pipe, image_prompt, cache_size, cache_t, cache_weight)
+    else:
+        # image output
+        image_output = image_generate(inputs, model, pipe, image_prompt, cache_size, cache_t, cache_weight)
 
-    return text_output, image
+    return text_output, image_output
 
 def show_point_cloud(file):
     point = torch.load(file.name).numpy()
@@ -133,32 +137,37 @@ def show_point_cloud(file):
     )
     return fig
 
+
 def create_imagebind_llm_demo():
     with gr.Blocks() as imagebind_llm_demo:
         modality = gr.CheckboxGroup(choices=['Image', 'Text', 'Video', 'Audio', 'Point Cloud'], value='Image', interactive=True,
                                     label='Input Modalities')
         with gr.Row():
-            with gr.Column() as image_input:
-                img_path = gr.Image(label='Image Input', type='filepath')
-                img_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
-            with gr.Column() as text_input:
-                text_path = gr.Textbox(label='Text Input', lines=9)
-                text_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
-            with gr.Column() as video_input:
-                video_path = gr.Video(label='Video Input')
-                video_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
-            with gr.Column() as audio_input:
-                audio_path = gr.Audio(label='Audio Input', type='filepath')
-                audio_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
-        with gr.Row():
-            with gr.Column(scale=1) as point_input:
-                point_path = gr.File(label='Point Cloud Input', elem_id="pointpath", elem_classes="")
-                output = gr.Plot()
-                btn = gr.Button(value="Show Point Cloud")
-                btn.click(show_point_cloud, point_path, output)
-                point_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
-
-            with gr.Column(scale=1):
+            with gr.Column():
+                with gr.Row():
+                    with gr.Column() as image_input:
+                        img_path = gr.Image(label='Image Input', type='filepath')
+                        img_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
+                    with gr.Column() as text_input:
+                        text_path = gr.Textbox(label='Text Input', lines=9)
+                        text_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
+                with gr.Row():
+                    with gr.Column() as video_input:
+                        video_path = gr.Video(label='Video Input')
+                        video_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
+                    with gr.Column() as audio_input:
+                        audio_path = gr.Audio(label='Audio Input', type='filepath')
+                        audio_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
+                with gr.Row():
+                    with gr.Column(scale=1) as point_input:
+                        point_path = gr.File(label='Point Cloud Input', elem_id="pointpath", elem_classes="")
+                        output = gr.Plot()
+                        btn = gr.Button(value="Show Point Cloud")
+                        btn.click(show_point_cloud, point_path, output)
+                        point_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
+            with gr.Column():
+                with gr.Row():
+                    output_dropdown = gr.Dropdown(['Text', 'Image'], value='Text', label='Output type')
                 with gr.Row():
                     prompt = gr.Textbox(lines=4, label="Question")
                 with gr.Row():
@@ -176,14 +185,11 @@ def create_imagebind_llm_demo():
                     # clear_botton = gr.Button("Clear")
                     run_botton = gr.Button("Run", variant='primary')
 
-        with gr.Row():
-            gr.Markdown("Output")
-        with gr.Row():
-            with gr.Column(scale=1):
-                text_output = gr.Textbox(lines=11, label='Text Out')
-
-            with gr.Column(scale=1):
-                image_output = gr.Image(label='Image Out')
+                with gr.Row():
+                    gr.Markdown("Output")
+                with gr.Row():
+                    text_output = gr.Textbox(lines=11, label='Text Out')
+                    image_output = gr.Image(label='Image Out', visible=False)
 
     def modality_select(modality, img, text, video, audio, point):
         modality = []
@@ -198,6 +204,23 @@ def create_imagebind_llm_demo():
         if point is not None:
             modality.append('Point Cloud')
         return modality
+
+    def change_output_type(output_type):
+        if output_type == 'Text':
+            result = [gr.update(visible=False),
+            gr.update(visible=True),
+            gr.update(visible=True),
+            gr.update(label='Question')]
+        elif output_type == 'Image':
+            result = [gr.update(visible=True),
+            gr.update(visible=False),
+            gr.update(visible=False),
+            gr.update(label='Prompt')]
+
+        return result
+
+    output_dropdown.change(change_output_type, output_dropdown, [image_output, text_output, question_input, prompt])
+
 
     img_path.change(modality_select, inputs=[modality, img_path, text_path, video_path, audio_path, point_path], outputs=[modality])
     text_path.blur(modality_select, inputs=[modality, img_path, text_path, video_path, audio_path, point_path], outputs=[modality])
@@ -217,7 +240,7 @@ def create_imagebind_llm_demo():
         point_path, point_weight,
         prompt, question_input,
         cache_size, cache_t, cache_weight,
-        max_gen_len, gen_t, top_p
+        max_gen_len, gen_t, top_p, output_dropdown
     ]
     outputs = [text_output, image_output]
     run_botton.click(fn=multimodal_generate, inputs=inputs, outputs=outputs)

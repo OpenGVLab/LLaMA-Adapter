@@ -4,7 +4,7 @@ import numpy as np
 
 
 @torch.inference_mode()
-def image_generate(inputs, model: llama.LLaMA_adapter, pipe, prompt, cache_size, cache_t, cache_weight, knn=True):
+def image_generate(inputs, model: llama.LLaMA_adapter, pipe, prompt, cache_size, cache_t, cache_weight, knn=True, point_scale=5.):
 
     embeddings = []
     embeddings_weights = []
@@ -14,7 +14,10 @@ def image_generate(inputs, model: llama.LLaMA_adapter, pipe, prompt, cache_size,
             type = 'vision'
         else:
             type = input_type.lower()
-        embeddings.append(model.image_bind({type : input}, prenorm=True)[1][type])
+        embedding = model.image_bind({type : input}, prenorm=True)[1][type]
+        if type == 'point':
+            embedding = embedding / point_scale
+        embeddings.append(embedding)
         embeddings_weights.append(input_weight)
     embeddings_weights = [x/(sum(embeddings_weights)+1e-6) for x in embeddings_weights]
     embedding = sum([embedding*embedding_weight for embedding, embedding_weight in zip(embeddings, embeddings_weights)])

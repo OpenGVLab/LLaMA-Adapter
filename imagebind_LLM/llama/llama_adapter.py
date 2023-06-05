@@ -122,7 +122,7 @@ class LLaMA_adapter(nn.Module):
                 type = 'vision'
             else:
                 type = input_type.lower()
-            outputs.append(self.image_bind({type : input})[type])
+            outputs.append(F.normalize(self.image_bind({type : input})[type], dim=-1))
             outputs_weights.append(input_weight)
         outputs_weights = [x/(sum(outputs_weights)+1e-6) for x in outputs_weights]
 
@@ -288,7 +288,6 @@ class LLaMA_adapter(nn.Module):
 
 _MODELS = {
     "7B-beta": "https://huggingface.co/Cxxs/ImageBind-LLM/resolve/main/7B-beta.pth",
-    "7B": "https://huggingface.co/Cxxs/ImageBind-LLM/resolve/main/7B.pth",
 }
 
 def available_models():
