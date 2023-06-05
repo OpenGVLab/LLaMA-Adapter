@@ -31,6 +31,12 @@
   └── tokenizer.model
   ```
 
+* Download the pre-train weight of [ImageBind wit 3D encoder](https://drive.google.com/file/d/1twRymNwVxZ_DG4TQ4m0VMi87j_2LAS8j/view?usp=sharing) for point cloud testing. Organize the downloaded file in the following structure
+  ```
+  LLaMA-Adapter/imagebind_LLM/
+  ├── ckpts
+      └── imagebind_LLM.pth
+  ```
 ## Inference
 
 Here is a simple inference script for ImageBind-LLM:
@@ -61,6 +67,33 @@ result = results[0].strip()
 print(result)
 ```
 
+Here is a simple inference script for ImageBind-LLM testing on 3D point cloud. We provide alternative input point clouds for testing. Please kindly check `examples/` for trying.
+
+
+```python
+import ImageBind.data as data
+import llama
+
+
+llama_dir = "/path/to/LLaMA"
+
+# checkpoint will be automatically downloaded
+model = llama.load("7B-beta", llama_dir, knn=True)
+model.eval()
+
+inputs = {}
+# provided alternative input point cloud object are airplane.pt, car.pt, door.pt, toilet.pt
+point = data.load_and_transform_point_cloud_data(["examples/airplane.pt"], device='cuda')
+inputs['Point'] = [point, 1]
+
+results = model.generate(
+    inputs,
+    [llama.format_prompt("Describe the 3D object in detail.")],
+    max_gen_len=256
+)
+result = results[0].strip()
+print(result)
+```
 
 ## Demo
 Run the following command to host a local demo page:
