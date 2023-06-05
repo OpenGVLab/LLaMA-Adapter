@@ -2,6 +2,7 @@
 
 ## News
 
+* [June 5, 2023] Release ImageBind-LLM for 3D point cloud input.
 * [June 2, 2023] Release fine-tuning code and beta-version checkpoint.
 * [May 29, 2023] Initial release.
 
@@ -31,6 +32,14 @@
   └── tokenizer.model
   ```
 
+* Download the pre-train weight of [ImageBind with 3D encoder](https://drive.google.com/file/d/1twRymNwVxZ_DG4TQ4m0VMi87j_2LAS8j/view?usp=sharing) that extends ImageBind with 3D point cloud modality, and organize the downloaded file in the following structure
+  ```
+  LLaMA-Adapter/imagebind_LLM/
+  ├── ckpts
+      ├── imagebind_w3D.pth
+      ├── 7B-beta.pth (download while running)
+      └── knn.index (download while running)
+  ```
 ## Inference
 
 Here is a simple inference script for ImageBind-LLM:
@@ -61,6 +70,23 @@ result = results[0].strip()
 print(result)
 ```
 
+Here is a simple inference script for ImageBind-LLM testing on 3D point clouds. We provide several point cloud samples in `examples/`.
+
+
+```python
+
+inputs = {}
+point = data.load_and_transform_point_cloud_data(["examples/airplane.pt"], device='cuda')
+inputs['Point'] = [point, 1]
+
+results = model.generate(
+    inputs,
+    [llama.format_prompt("Describe the 3D object in detail:")],
+    max_gen_len=256
+)
+result = results[0].strip()
+print(result)
+```
 
 ## Demo
 Run the following command to host a local demo page:
