@@ -9,6 +9,9 @@
 import os
 from functools import partial
 from types import SimpleNamespace
+from collections import OrderedDict
+from .pointbert.point_encoder import PointTransformerBind
+from .pointbert.checkpoint import get_missing_parameters_message, get_unexpected_parameters_message
 
 import torch
 import torch.nn as nn
@@ -31,8 +34,8 @@ ModalityType = SimpleNamespace(
     THERMAL="thermal",
     DEPTH="depth",
     IMU="imu",
+    POINT="point",
 )
-
 
 class ImageBindModel(nn.Module):
     def __init__(
@@ -128,6 +131,8 @@ class ImageBindModel(nn.Module):
             out_embed_dim
         )
 
+        self.point_trunk = PointTransformerBind()
+    
     def _create_modality_preprocessors(
         self,
         video_frames=2,
@@ -413,6 +418,12 @@ class ImageBindModel(nn.Module):
             nn.Linear(imu_embed_dim, out_embed_dim, bias=False),
         )
 
+        modality_heads[ModalityType.POINT] = nn.Sequential(
+            nn.LayerNorm(normalized_shape=512, eps=1e-6),
+            nn.Dropout(p=0.5),
+            nn.Linear(512, out_embed_dim, bias=False),
+        )
+
         return nn.ModuleDict(modality_heads)
 
     def _create_modality_postprocessors(self, out_embed_dim):
@@ -438,7 +449,10 @@ class ImageBindModel(nn.Module):
             Normalize(dim=-1),
             LearnableLogitScaling(logit_scale_init=5.0, learnable=False),
         )
-
+        modality_postprocessors[ModalityType.POINT] = nn.Sequential(
+            Normalize(dim=-1),
+            LearnableLogitScaling(logit_scale_init=1.0, learnable=False),
+        )
         return nn.ModuleDict(modality_postprocessors)
 
     def forward(self, inputs):
@@ -454,15 +468,19 @@ class ImageBindModel(nn.Module):
                 )
 
             if modality_value is not None:
-                modality_value = self.modality_preprocessors[modality_key](
-                    **{modality_key: modality_value}
-                )
-                trunk_inputs = modality_value["trunk"]
-                head_inputs = modality_value["head"]
-                modality_value = self.modality_trunks[modality_key](**trunk_inputs)
-                modality_value = self.modality_heads[modality_key](
-                    modality_value, **head_inputs
-                )
+                if modality_key == ModalityType.POINT:
+                    modality_value = self.point_trunk(modality_value)
+                    modality_value = self.modality_heads[modality_key](modality_value)
+                else:
+                    modality_value = self.modality_preprocessors[modality_key](
+                        **{modality_key: modality_value}
+                    )
+                    trunk_inputs = modality_value["trunk"]
+                    head_inputs = modality_value["head"]
+                    modality_value = self.modality_trunks[modality_key](**trunk_inputs)
+                    modality_value = self.modality_heads[modality_key](
+                        modality_value, **head_inputs
+                    )
                 modality_value = self.modality_postprocessors[modality_key](
                     modality_value
                 )
@@ -488,18 +506,7 @@ def imagebind_huge(pretrained=False):
         audio_drop_path=0.1,
         imu_drop_path=0.7,
     )
-
+    
     if pretrained:
-        if not os.path.exists("imagebind_huge.pth"):
-            print(
-                "Downloading imagebind weights to imagebind_huge.pth ..."
-            )
-            torch.hub.download_url_to_file(
-                "https://dl.fbaipublicfiles.com/imagebind/imagebind_huge.pth",
-                "imagebind_huge.pth",
-                progress=True,
-            )
-
-        model.load_state_dict(torch.load("imagebind_huge.pth"))
-
+        model.load_state_dict(torch.load("./ckpts/imagebind_LLM.pth"))
     return model
