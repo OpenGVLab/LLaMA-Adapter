@@ -455,8 +455,9 @@ class ImageBindModel(nn.Module):
         )
         return nn.ModuleDict(modality_postprocessors)
 
-    def forward(self, inputs):
+    def forward(self, inputs, prenorm=False):
         outputs = {}
+        outputs_prenorm = {}
         for modality_key, modality_value in inputs.items():
             reduce_list = (
                 modality_value.ndim >= 5
@@ -481,17 +482,28 @@ class ImageBindModel(nn.Module):
                     modality_value = self.modality_heads[modality_key](
                         modality_value, **head_inputs
                     )
-                modality_value = self.modality_postprocessors[modality_key](
+
+                modality_value_postnorm = self.modality_postprocessors[modality_key](
                     modality_value
                 )
 
+
                 if reduce_list:
-                    modality_value = modality_value.reshape(B, S, -1)
-                    modality_value = modality_value.mean(dim=1)
+                    if prenorm:
+                        modality_value = modality_value.reshape(B, S, -1)
+                        modality_value = modality_value.mean(dim=1)
 
-                outputs[modality_key] = modality_value
+                    modality_value_postnorm = modality_value_postnorm.reshape(B, S, -1)
+                    modality_value_postnorm = modality_value_postnorm.mean(dim=1)
 
-        return outputs
+                if prenorm:
+                    outputs_prenorm[modality_key] = modality_value
+                outputs[modality_key] = modality_value_postnorm
+
+        if prenorm:
+            return outputs, outputs_prenorm
+        else:
+            return outputs
 
 
 def imagebind_huge(pretrained=False):
@@ -506,7 +518,17 @@ def imagebind_huge(pretrained=False):
         audio_drop_path=0.1,
         imu_drop_path=0.7,
     )
-    
+
     if pretrained:
-        model.load_state_dict(torch.load("./ckpts/imagebind_LLM.pth"))
+        if not os.path.exists("./ckpts/imagebind_w3D.pth"):
+            print(
+                "Downloading the pre-train weight of ImageBind with 3D encoder to ./ckpts/imagebind_w3D.pth ..."
+            )
+            os.makedirs("./ckpts", exist_ok=True)
+            torch.hub.download_url_to_file(
+                "https://huggingface.co/ZiyuG/ImageBind_w3D/resolve/e9206a10f118b0790c730264e7b3aa5c324c35cb/imagebind_w3D.pth",
+                "./ckpts/imagebind_w3D.pth",
+                progress=True,
+            )
+        model.load_state_dict(torch.load("./ckpts/imagebind_w3D.pth"))
     return model

@@ -17,7 +17,7 @@ from ImageBind.models import imagebind_model
 class LLaMA_adapter(nn.Module):
     """ Masked Autoencoder with VisionTransformer backbone
     """
-    def __init__(self, llama_ckpt_dir, llama_tokenizer, knn=False, phase="finetune", legacy_bridge=True):
+    def __init__(self, llama_ckpt_dir, llama_tokenizer, knn=False, phase="finetune", legacy_bridge=False):
         super().__init__()
 
         # 1. imagebind and imagebind projector
@@ -288,6 +288,7 @@ class LLaMA_adapter(nn.Module):
 
 _MODELS = {
     "7B-beta": "https://huggingface.co/Cxxs/ImageBind-LLM/resolve/main/7B-beta.pth",
+    "7B": "https://huggingface.co/Cxxs/ImageBind-LLM/resolve/main/7B.pth",
 }
 
 def available_models():

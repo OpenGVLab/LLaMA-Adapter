@@ -6,6 +6,8 @@ import plotly.graph_objects as go
 import torch, numpy, random
 
 import ImageBind.data as data
+from diffusers import StableUnCLIPImg2ImgPipeline
+from image_generate import image_generate
 
 import llama
 
@@ -26,6 +28,9 @@ args = parser.parse_args()
 
 model = llama.load(args.model, args.llama_dir, knn=True, llama_type=args.llama_type)
 model.eval()
+
+pipe = StableUnCLIPImg2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-2-1-unclip", cache_dir="./ckpts")
+pipe = pipe.to("cuda")
 
 
 def multimodal_generate(
@@ -88,15 +93,22 @@ def multimodal_generate(
         point = data.load_and_transform_point_cloud_data([point_path], device='cuda')
         inputs['Point'] = [point, point_weight]
 
+    image_prompt = prompt # image use original prompt
+
+    # text output
     prompts = [llama.format_prompt(prompt, question_input)]
 
     prompts = [model.tokenizer.encode(x, bos=True, eos=False) for x in prompts]
     with torch.cuda.amp.autocast():
         results = model.generate(inputs, prompts, max_gen_len=max_gen_len, temperature=gen_t, top_p=top_p,
                                      cache_size=cache_size, cache_t=cache_t, cache_weight=cache_weight)
-    result = results[0].strip()
-    print(result)
-    return result
+    text_output = results[0].strip()
+    print(text_output)
+
+    # image output
+    image = image_generate(inputs, model, pipe, image_prompt, cache_size, cache_t, cache_weight)
+
+    return text_output, image
 
 def show_point_cloud(file):
     point = torch.load(file.name).numpy()
@@ -138,20 +150,19 @@ def create_imagebind_llm_demo():
             with gr.Column() as audio_input:
                 audio_path = gr.Audio(label='Audio Input', type='filepath')
                 audio_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
-            with gr.Column() as point_input:
-                point_path = gr.File(label='Point Cloud Input')
+        with gr.Row():
+            with gr.Column(scale=1) as point_input:
+                point_path = gr.File(label='Point Cloud Input', elem_id="pointpath", elem_classes="")
                 output = gr.Plot()
                 btn = gr.Button(value="Show Point Cloud")
                 btn.click(show_point_cloud, point_path, output)
                 point_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
 
-
-        with gr.Row():
-            with gr.Column():
+            with gr.Column(scale=1):
                 with gr.Row():
-                    prompt = gr.Textbox(lines=2, label="Question")
+                    prompt = gr.Textbox(lines=4, label="Question")
                 with gr.Row():
-                    question_input = gr.Textbox(lines=2, label="Question Input (Optional)")
+                    question_input = gr.Textbox(lines=4, label="Question Input (Optional)")
                 with gr.Row():
                     cache_size = gr.Slider(minimum=1, maximum=100, value=10, interactive=True, label="Cache Size")
                     cache_t = gr.Slider(minimum=0.0, maximum=100, value=20, interactive=True, label="Cache Temperature")
@@ -165,8 +176,14 @@ def create_imagebind_llm_demo():
                     # clear_botton = gr.Button("Clear")
                     run_botton = gr.Button("Run", variant='primary')
 
-            with gr.Column():
-                output = gr.Textbox(lines=11, label='Output')
+        with gr.Row():
+            gr.Markdown("Output")
+        with gr.Row():
+            with gr.Column(scale=1):
+                text_output = gr.Textbox(lines=11, label='Text Out')
+
+            with gr.Column(scale=1):
+                image_output = gr.Image(label='Image Out')
 
     def modality_select(modality, img, text, video, audio, point):
         modality = []
@@ -202,7 +219,7 @@ def create_imagebind_llm_demo():
         cache_size, cache_t, cache_weight,
         max_gen_len, gen_t, top_p
     ]
-    outputs = [output]
+    outputs = [text_output, image_output]
     run_botton.click(fn=multimodal_generate, inputs=inputs, outputs=outputs)
 
     # gr.Examples(
@@ -219,7 +236,7 @@ description = """
 # ImageBind-LLM🚀
 """
 
-with gr.Blocks(css='style.css') as demo:
+with gr.Blocks(theme=gr.themes.Default(), css="#pointpath {height: 10em} .label {height: 3em}") as demo:
     gr.Markdown(description)
     create_imagebind_llm_demo()
 
