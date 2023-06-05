@@ -2,7 +2,8 @@ import os
 import argparse
 
 import gradio as gr
-import torch
+import plotly.graph_objects as go
+import torch, numpy, random
 
 import ImageBind.data as data
 
@@ -37,6 +38,8 @@ def multimodal_generate(
         video_weight,
         audio_path,
         audio_weight,
+        point_path,
+        point_weight,
         prompt,
         question_input,
         cache_size,
@@ -77,6 +80,13 @@ def multimodal_generate(
             raise gr.Error('Please set the weight')
         audio = data.load_and_transform_audio_data([audio_path], device='cuda')
         inputs['Audio'] = [audio, audio_weight]
+    if 'Point Cloud' in modality:
+        if point_path is None:
+            raise gr.Error('Please select a point cloud')
+        if point_weight == 0:
+            raise gr.Error('Please set the weight')
+        point = data.load_and_transform_point_cloud_data([point_path], device='cuda')
+        inputs['Point'] = [point, point_weight]
 
     prompts = [llama.format_prompt(prompt, question_input)]
 
@@ -88,9 +98,32 @@ def multimodal_generate(
     print(result)
     return result
 
+def show_point_cloud(file):
+    point = torch.load(file.name).numpy()
+    fig = go.Figure(
+        data=[
+            go.Scatter3d(
+                x=point[:,0], y=point[:,1], z=point[:,2], 
+                mode='markers',
+                marker=dict(
+                size=1.2,
+                color='gray'
+            )
+            )
+        ],
+        layout=dict(
+            scene=dict(
+                xaxis=dict(visible=False),
+                yaxis=dict(visible=False),
+                zaxis=dict(visible=False)
+            )
+        ),
+    )
+    return fig
+
 def create_imagebind_llm_demo():
     with gr.Blocks() as imagebind_llm_demo:
-        modality = gr.CheckboxGroup(choices=['Image', 'Text', 'Video', 'Audio'], value='Image', interactive=True,
+        modality = gr.CheckboxGroup(choices=['Image', 'Text', 'Video', 'Audio', 'Point Cloud'], value='Image', interactive=True,
                                     label='Input Modalities')
         with gr.Row():
             with gr.Column() as image_input:
@@ -105,6 +138,13 @@ def create_imagebind_llm_demo():
             with gr.Column() as audio_input:
                 audio_path = gr.Audio(label='Audio Input', type='filepath')
                 audio_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
+            with gr.Column() as point_input:
+                point_path = gr.File(label='Point Cloud Input')
+                output = gr.Plot()
+                btn = gr.Button(value="Show Point Cloud")
+                btn.click(show_point_cloud, point_path, output)
+                point_weight = gr.Slider(minimum=0.0, maximum=1.0, value=1.0, interactive=True, label='Weight')
+
 
         with gr.Row():
             with gr.Column():
@@ -128,7 +168,7 @@ def create_imagebind_llm_demo():
             with gr.Column():
                 output = gr.Textbox(lines=11, label='Output')
 
-    def modality_select(modality, img, text, video, audio):
+    def modality_select(modality, img, text, video, audio, point):
         modality = []
         if img is not None:
             modality.append('Image')
@@ -138,13 +178,17 @@ def create_imagebind_llm_demo():
             modality.append('Video')
         if audio is not None:
             modality.append('Audio')
+        if point is not None:
+            modality.append('Point Cloud')
         return modality
 
-    img_path.change(modality_select, inputs=[modality, img_path, text_path, video_path, audio_path], outputs=[modality])
-    text_path.blur(modality_select, inputs=[modality, img_path, text_path, video_path, audio_path], outputs=[modality])
-    video_path.change(modality_select, inputs=[modality, img_path, text_path, video_path, audio_path],
+    img_path.change(modality_select, inputs=[modality, img_path, text_path, video_path, audio_path, point_path], outputs=[modality])
+    text_path.blur(modality_select, inputs=[modality, img_path, text_path, video_path, audio_path, point_path], outputs=[modality])
+    video_path.change(modality_select, inputs=[modality, img_path, text_path, video_path, audio_path, point_path],
                       outputs=[modality])
-    audio_path.change(modality_select, inputs=[modality, img_path, text_path, video_path, audio_path],
+    audio_path.change(modality_select, inputs=[modality, img_path, text_path, video_path, audio_path, point_path],
+                      outputs=[modality])
+    point_path.change(modality_select, inputs=[modality, img_path, text_path, video_path, audio_path, point_path],
                       outputs=[modality])
 
     inputs = [
@@ -153,6 +197,7 @@ def create_imagebind_llm_demo():
         text_path, text_weight,
         video_path, video_weight,
         audio_path, audio_weight,
+        point_path, point_weight,
         prompt, question_input,
         cache_size, cache_t, cache_weight,
         max_gen_len, gen_t, top_p
