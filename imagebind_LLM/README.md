@@ -2,7 +2,7 @@
 
 ## News
 
-* [June 5, 2023] Release ImageBind-LLM for 3D point cloud input.
+* [June 5, 2023] Release ImageBind-LLM for 3D point cloud input by [Point-Bind](https://github.com/ZrrSkywalker/Point-Bind).
 * [June 2, 2023] Release fine-tuning code and beta-version checkpoint.
 * [May 29, 2023] Initial release.
 
