@@ -70,7 +70,7 @@ result = results[0].strip()
 print(result)
 ```
 
-Here is a simple inference script for ImageBind-LLM testing on 3D point clouds. We provide several point cloud samples in `examples/`.
+Here is a simple inference script for ImageBind-LLM testing on 3D point clouds via Point-Bind. We provide several point cloud samples in `examples/`.
 
 
 ```python
