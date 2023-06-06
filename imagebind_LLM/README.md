@@ -32,7 +32,7 @@
   └── tokenizer.model
   ```
 
-* Download the pre-train weight of [ImageBind with 3D encoder](https://drive.google.com/file/d/1twRymNwVxZ_DG4TQ4m0VMi87j_2LAS8j/view?usp=sharing) that extends ImageBind with 3D point cloud modality, and organize the downloaded file in the following structure
+* Download the pre-train weight of [Point-Bind](https://drive.google.com/file/d/1twRymNwVxZ_DG4TQ4m0VMi87j_2LAS8j/view?usp=sharing) that extends ImageBind with 3D point cloud modality, and organize the downloaded file in the following structure
   ```
   LLaMA-Adapter/imagebind_LLM/
   ├── ckpts
