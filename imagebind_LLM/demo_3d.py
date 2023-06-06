@@ -4,7 +4,7 @@ import llama
 
 llama_dir = "/path/to/LLaMA"
 
-model = llama.load("7B-beta", llama_dir, knn=True)
+model = llama.load("7B", llama_dir, knn=True)
 model.eval()
 
 inputs = {}

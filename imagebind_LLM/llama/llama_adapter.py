@@ -9,7 +9,8 @@ import torch.nn.functional as F
 
 from .llama import Transformer, ModelArgs, RMSNorm
 from .tokenizer import Tokenizer
-from .utils import sample_top_p, _download
+from util.misc import download
+from .utils import sample_top_p
 
 from ImageBind.models import imagebind_model
 
@@ -78,7 +79,7 @@ class LLaMA_adapter(nn.Module):
         self.knn = knn
         if knn:
             import faiss
-            self.index = faiss.read_index(_download("https://huggingface.co/csuhan/knn/resolve/main/knn.index", "ckpts"))
+            self.index = faiss.read_index(download("https://huggingface.co/csuhan/knn/resolve/main/knn.index", "ckpts"))
 
         # 6. training criterion
         self.criterion = torch.nn.CrossEntropyLoss(ignore_index=0)
@@ -287,7 +288,7 @@ class LLaMA_adapter(nn.Module):
 
 
 _MODELS = {
-    "7B-beta": "https://huggingface.co/Cxxs/ImageBind-LLM/resolve/main/7B-beta.pth",
+    "7B": "https://huggingface.co/Cxxs/ImageBind-LLM/resolve/main/7B.pth",
 }
 
 def available_models():
@@ -296,7 +297,7 @@ def available_models():
 def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu", download_root='ckpts',
          knn=False, llama_type="7B", phase="finetune"):
     if name in _MODELS:
-        model_path = _download(_MODELS[name], download_root)
+        model_path = download(_MODELS[name], download_root)
     elif os.path.isfile(name):
         model_path = name
     else:
