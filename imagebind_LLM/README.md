@@ -107,9 +107,9 @@
 See [train.md](docs/train.md)
 
 ## Acknowledgement
-[OpenChineseLLaMA](https://github.com/OpenLMLab/OpenChineseLLaMA)
-[Chinese-LLaMA-Alpaca](https://github.com/ymcui/Chinese-LLaMA-Alpaca)
-[GPT-4-LLM](https://github.com/Instruction-Tuning-with-GPT-4/GPT-4-LLM)
-[LLaVA](https://github.com/haotian-liu/LLaVA)
-[llama](https://github.com/facebookresearch/llama)
-[Point-Bind](https://github.com/ZrrSkywalker/Point-Bind)
++ [OpenChineseLLaMA](https://github.com/OpenLMLab/OpenChineseLLaMA)
++ [Chinese-LLaMA-Alpaca](https://github.com/ymcui/Chinese-LLaMA-Alpaca)
++ [GPT-4-LLM](https://github.com/Instruction-Tuning-with-GPT-4/GPT-4-LLM)
++ [LLaVA](https://github.com/haotian-liu/LLaVA)
++ [llama](https://github.com/facebookresearch/llama)
++ [Point-Bind](https://github.com/ZrrSkywalker/Point-Bind)
