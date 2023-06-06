@@ -2,7 +2,7 @@
 
 ## News
 
-* [June 5, 2023] Release ImageBind-LLM for 3D point cloud input by [Point-Bind](https://github.com/ZrrSkywalker/Point-Bind).
+* [June 5, 2023] Support [3D point cloud input](https://github.com/ZrrSkywalker/Point-Bind) and image generation output. Release stable-version checkpoint.
 * [June 2, 2023] Release fine-tuning code and beta-version checkpoint.
 * [May 29, 2023] Initial release.
 
@@ -31,70 +31,85 @@
   │   └── params.json
   └── tokenizer.model
   ```
-
-* Download the pre-train weight of [Point-Bind](https://drive.google.com/file/d/1twRymNwVxZ_DG4TQ4m0VMi87j_2LAS8j/view?usp=sharing) that extends ImageBind with 3D point cloud modality, and organize the downloaded file in the following structure
+  
+* The current stable version of ImageBind-LLM is built upon [Open-Chinese-LLaMA](https://github.com/OpenLMLab/OpenChineseLLaMA) for better multilingual support. The following command downloads a pre-processed delta-version patch and automatically merges it into LLaMA weights:
+  ```bash
+  python get_chinese_llama.py --llama_dir=/path/to/llama_model_weights
   ```
-  LLaMA-Adapter/imagebind_LLM/
-  ├── ckpts
-      ├── imagebind_w3D.pth
-      ├── 7B-beta.pth (download while running)
-      └── knn.index (download while running)
+  After running, the Open-Chinese-LLaMA weights will be recovered in `/path/to/llama_model_weights`:
   ```
+  /path/to/llama_model_weights
+  ├── 7B
+  ├── 7B_chinese
+  └── tokenizer.model
+  ```
+  
+* Other dependent resources will be automatically downloaded at runtime. 
 ## Inference
 
-Here is a simple inference script for ImageBind-LLM:
+* Here is a simple script for multi-modal inference with ImageBind-LLM:
 
-```python
-import ImageBind.data as data
-import llama
+  ```python
+  import ImageBind.data as data
+  import llama
+  
+  
+  llama_dir = "/path/to/LLaMA"
+  
+  # checkpoint will be automatically downloaded
+  model = llama.load("7B", llama_dir, knn=True)
+  model.eval()
+  
+  inputs = {}
+  image = data.load_and_transform_vision_data(["examples/girl.jpg"], device='cuda')
+  inputs['Image'] = [image, 1]
+  audio = data.load_and_transform_audio_data(['examples/girl_bgm.wav'], device='cuda')
+  inputs['Audio'] = [audio, 1]
+  
+  results = model.generate(
+      inputs,
+      [llama.format_prompt("Guess the girl's mood based on the background music and explain the reason?")],
+      max_gen_len=256
+  )
+  result = results[0].strip()
+  print(result)
+  ```
 
+* Powered by the amazing [Point-Bind](https://github.com/ZrrSkywalker/Point-Bind) project, ImageBind-LLM can also receive 3D point cloud data.    We provide several point cloud samples in `examples/`.
 
-llama_dir = "/path/to/LLaMA"
-
-# checkpoint will be automatically downloaded
-model = llama.load("7B-beta", llama_dir, knn=True)
-model.eval()
-
-inputs = {}
-image = data.load_and_transform_vision_data(["examples/girl.jpg"], device='cuda')
-inputs['Image'] = [image, 1]
-audio = data.load_and_transform_audio_data(['examples/girl_bgm.wav'], device='cuda')
-inputs['Audio'] = [audio, 1]
-
-results = model.generate(
-    inputs,
-    [llama.format_prompt("Guess the girl's mood based on the background music and explain the reason?")],
-    max_gen_len=256
-)
-result = results[0].strip()
-print(result)
-```
-
-Here is a simple inference script for ImageBind-LLM testing on 3D point clouds via Point-Bind. We provide several point cloud samples in `examples/`.
-
-
-```python
-
-inputs = {}
-point = data.load_and_transform_point_cloud_data(["examples/airplane.pt"], device='cuda')
-inputs['Point'] = [point, 1]
-
-results = model.generate(
-    inputs,
-    [llama.format_prompt("Describe the 3D object in detail:")],
-    max_gen_len=256
-)
-result = results[0].strip()
-print(result)
-```
+  ```python
+  inputs = {}
+  point = data.load_and_transform_point_cloud_data(["examples/airplane.pt"], device='cuda')
+  inputs['Point'] = [point, 1]
+  
+  results = model.generate(
+      inputs,
+      [llama.format_prompt("Describe the 3D object in detail:")],
+      max_gen_len=256
+  )
+  result = results[0].strip()
+  print(result)
+  ```
 
 ## Demo
-Run the following command to host a local demo page:
-``` bash
-python gradio_app.py --llama_dir /path/to/llama_model_weights
-```
+**Highly recommend trying out our web demo, which incorporates all features currently supported by ImageBind-LLM**
 
-## Fine-tuning
-```
-. exps/finetune.sh <pre-trained checkopint path> <output path>
-```
+
+
+* Run the following command to host the demo locally:
+  ``` bash
+  python gradio_app.py --llama_dir /path/to/llama_model_weights
+  ```
+
+* The official online demo will come very soon
+
+## Pre-traininig & Fine-tuning
+See [train.md](docs/train.md)
+
+## Acknowledgement
+[OpenChineseLLaMA](https://github.com/OpenLMLab/OpenChineseLLaMA)
+[Chinese-LLaMA-Alpaca](https://github.com/ymcui/Chinese-LLaMA-Alpaca)
+[GPT-4-LLM](https://github.com/Instruction-Tuning-with-GPT-4/GPT-4-LLM)
+[LLaVA](https://github.com/haotian-liu/LLaVA)
+[llama](https://github.com/facebookresearch/llama)
+[Point-Bind](https://github.com/ZrrSkywalker/Point-Bind)

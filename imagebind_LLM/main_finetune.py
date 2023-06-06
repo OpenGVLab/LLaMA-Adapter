@@ -29,7 +29,7 @@ def get_args_parser():
                         help='Accumulate gradient iterations (for increasing the effective batch size under memory constraints)')
 
     # Model parameters
-    parser.add_argument('--llama_type', default='7B', type=str,
+    parser.add_argument('--llama_type', default='7B_chinese', type=str,
                         help='Type of LLaMA model') #
     parser.add_argument('--llama_path', default='/path/to/llama', type=str,
                         help='path to LLaMA pretrained checkpoint')

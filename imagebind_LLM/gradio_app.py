@@ -4,6 +4,7 @@ import argparse
 import gradio as gr
 import plotly.graph_objects as go
 import torch, numpy, random
+import torch.cuda
 
 import ImageBind.data as data
 from diffusers import StableUnCLIPImg2ImgPipeline
@@ -13,12 +14,12 @@ import llama
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "--model", default="7B-beta", type=str,
-    help="Name of or path to LLaMAAdapter pretrained checkpoint",
+    "--model", default="7B", type=str,
+    help="Name of or path to ImageBind-LLM pretrained checkpoint",
 )
 parser.add_argument(
-    "--llama_type", default="7B", type=str,
-    help="Type of llama",
+    "--llama_type", default="7B_chinese", type=str,
+    help="Type of llama original weight",
 )
 parser.add_argument(
     "--llama_dir", default="/path/to/llama", type=str,
