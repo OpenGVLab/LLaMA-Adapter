@@ -177,7 +177,7 @@ def create_imagebind_llm_demo():
                     cache_size = gr.Slider(minimum=1, maximum=100, value=10, interactive=True, label="Cache Size")
                     cache_t = gr.Slider(minimum=0.0, maximum=100, value=20, interactive=True, label="Cache Temperature")
                     cache_weight = gr.Slider(minimum=0.0, maximum=1, value=0.5, interactive=True, label="Cache Weight")
-                with gr.Row():
+                with gr.Row() as text_config_row:
                     max_gen_len = gr.Slider(minimum=1, maximum=512, value=128, interactive=True, label="Max Length")
                     # with gr.Accordion(label='Advanced options', open=False):
                     gen_t = gr.Slider(minimum=0, maximum=1, value=0.1, interactive=True, label="Temperature")
@@ -211,16 +211,19 @@ def create_imagebind_llm_demo():
             result = [gr.update(visible=False),
             gr.update(visible=True),
             gr.update(visible=True),
-            gr.update(label='Question')]
+            gr.update(label='Question'),
+            gr.update(visible=True)]
         elif output_type == 'Image':
             result = [gr.update(visible=True),
             gr.update(visible=False),
             gr.update(visible=False),
-            gr.update(label='Prompt')]
+            gr.update(label='Prompt'),
+            gr.update(visible=False)]
 
         return result
 
-    output_dropdown.change(change_output_type, output_dropdown, [image_output, text_output, question_input, prompt])
+    output_dropdown.change(change_output_type, output_dropdown,
+                           [image_output, text_output, question_input, prompt, text_config_row])
 
 
     img_path.change(modality_select, inputs=[modality, img_path, text_path, video_path, audio_path, point_path], outputs=[modality])
