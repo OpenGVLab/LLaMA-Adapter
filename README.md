@@ -70,7 +70,7 @@ Our approach can be simply extended to **Multi-modal Input Instructions**. The r
 
 ## Setup
 
-Here is a from-scratch script.
+Here is a from-scratch script for **LLaMA-Adapter V1**.
 ```bash
 conda create -n llama_adapter -y python=3.8
 conda activate llama_adapter
@@ -82,6 +82,7 @@ conda install pytorch cudatoolkit -c pytorch -y
 pip install -r requirements.txt
 pip install -e .
 ```
+**Note**: **To setup other models**, please refer to [llama_adapter_v2_chat65b](llama_adapter_v2_chat65b), [llama_adapter_v2_multimodal](llama_adapter_v2_multimodal) and [imagebind_LLM](imagebind_LLM) for more details.
 
 ## Inference
 
