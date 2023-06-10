@@ -13,6 +13,7 @@ import torch
 from fairscale.nn.model_parallel.initialize import initialize_model_parallel
 
 from llama import LLaMA, ModelArgs, Tokenizer, Transformer
+from utils import quantization
 
 PROMPT_DICT = {
     "prompt_input": (
@@ -49,6 +50,7 @@ def load(
     world_size: int,
     max_seq_len: int,
     max_batch_size: int,
+    quantizer: bool=False,
 ) -> LLaMA:
     start_time = time.time()
     checkpoints = sorted(Path(ckpt_dir).glob("*.pth"))
@@ -62,12 +64,13 @@ def load(
     with open(Path(ckpt_dir) / "params.json", "r") as f:
         params = json.loads(f.read())
 
-    model_args: ModelArgs = ModelArgs(max_seq_len=max_seq_len, max_batch_size=max_batch_size, **params)
+    model_args: ModelArgs = ModelArgs(max_seq_len=max_seq_len, max_batch_size=max_batch_size, quantizer=quantizer, **params)
     model_args.adapter_layer = int(adapter_checkpoint["adapter_query.weight"].shape[0] / model_args.adapter_len)
     tokenizer = Tokenizer(model_path=tokenizer_path)
     model_args.vocab_size = tokenizer.n_words
     torch.set_default_tensor_type(torch.cuda.HalfTensor)
     model = Transformer(model_args)
+    print(model)
     torch.set_default_tensor_type(torch.FloatTensor)
     model.load_state_dict(checkpoint, strict=False)
     model.load_state_dict(adapter_checkpoint, strict=False)
@@ -84,12 +87,13 @@ def main(
     top_p: float = 0.75,
     max_seq_len: int = 512,
     max_batch_size: int = 32,
+    quantizer: bool = False,
 ):
     local_rank, world_size = setup_model_parallel()
     if local_rank > 0:
         sys.stdout = open(os.devnull, "w")
 
-    generator = load(ckpt_dir, tokenizer_path, adapter_path, local_rank, world_size, max_seq_len, max_batch_size)
+    generator = load(ckpt_dir, tokenizer_path, adapter_path, local_rank, world_size, max_seq_len, max_batch_size, quantizer)
     instructs = [
         "Tell me about alpacas.",
         "Tell me about the president of Mexico in 2019.",
