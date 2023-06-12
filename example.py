@@ -13,7 +13,6 @@ import torch
 from fairscale.nn.model_parallel.initialize import initialize_model_parallel
 
 from llama import LLaMA, ModelArgs, Tokenizer, Transformer
-from utils import quantization
 
 PROMPT_DICT = {
     "prompt_input": (
