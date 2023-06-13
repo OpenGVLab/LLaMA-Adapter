@@ -2,8 +2,9 @@
 
 Official implementation of ['LLaMA-Adapter: Efficient Fine-tuning of Language Models with Zero-init Attention'](https://arxiv.org/pdf/2303.16199.pdf) and ['LLaMA-Adapter V2: Parameter-Efficient Visual Instruction Model'](https://arxiv.org/pdf/2304.15010.pdf).
 
-<p align="center">                                                                                                                                          <img src="docs/logo_v3.png"/ width="70%"> <br>
+<p align="center">                                                                                                                                          <img src="docs/logo_v4.png"/ width="100%"> <br>
 </p>
+
 
 This repo proposes **LLaMA-Adapter (V2)**, a lightweight adaption method for fine-tuning **Instruction-following** and **Multi-modal** [LLaMA](https://github.com/facebookresearch/llama) models 🔥.
 
@@ -342,8 +343,8 @@ If you find our LLaMA-Adapter code and paper useful, please kindly cite:
   journal={arXiv preprint arXiv:2303.16199},
   year={2023}
 }
-``` 
- 
+```
+
 If you find our LLaMA-Adapter V2 code and paper useful, please kindly cite:
 ```bash
 @article{gao2023llamaadapterv2,
