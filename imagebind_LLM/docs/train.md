@@ -31,6 +31,14 @@ We are now ready to start pre-training (please make sure that the original LLaMA
 . exps/pretrain.sh /path/to/llama_model_weights /path/to/pretrain-data-config.yaml /output/path
 ```
 
+### Pre-trained checkpoint
+We release our image-text pre-trained checkpoint for reproduction. You may directly use it for fine-tuning.
+
+| Name              | Link                                                                                  |
+|-------------------|---------------------------------------------------------------------------------------|
+| 7B-pretrained.pth | [File Link](https://huggingface.co/Cxxs/ImageBind-LLM/resolve/main/7B-pretrained.pth) |
+
+
 
 
 ## Fine-tuning

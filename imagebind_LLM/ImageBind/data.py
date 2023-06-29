@@ -12,6 +12,8 @@ import torch
 import torch.nn as nn
 import torchaudio
 from PIL import Image
+import open3d as o3d
+import numpy
 from pytorchvideo import transforms as pv_transforms
 from pytorchvideo.data.clip_sampling import ConstantClipsPerVideoSampler
 from pytorchvideo.data.encoded_video import EncodedVideo
@@ -166,7 +168,28 @@ def load_and_transform_point_cloud_data(point_paths, device):
     for point_path in point_paths:
         if type(point_path) != str:
             point_path = point_path.name
-        point = torch.load(point_path).to(device)
+        file_name = point_path
+        if '.ply' in file_name or '.pts' in file_name or '.pcd' in file_name or '.xyz' in file_name:
+            pcd = o3d.io.read_point_cloud(file_name)
+            point = numpy.asarray(pcd.points)
+        elif '.pt' in file_name:
+            point = torch.load(file_name).numpy()
+        elif '.npy' in file_name:
+            point = numpy.load(file_name)
+        elif '.obj' in file_name:
+            points = []
+            with open(file_name, 'r') as file:
+                for line in file:
+                    line = line.strip()
+                    if line.startswith('v '):
+                        data = line.split(' ')
+                        x = float(data[1])
+                        y = float(data[2])
+                        z = float(data[3])
+                        points.append((x, y, z))
+            point = numpy.asarray(points)
+        point = torch.tensor(point).to(device)
+        # point = point.type(torch.cuda.HalfTensor)
         point_outputs.append(point)
         
     return torch.stack(point_outputs, dim=0)
@@ -321,9 +344,9 @@ def load_and_transform_video_data(
     for video_path in video_paths:
         video = EncodedVideo.from_path(
             video_path,
-            decoder="decord",
+            decoder="pyav",
             decode_audio=False,
-            **{"sample_rate": sample_rate},
+            # **{"sample_rate": sample_rate},
         )
 
         all_clips_timepoints = get_clip_timepoints(clip_sampler, video.duration)

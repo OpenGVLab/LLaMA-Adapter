@@ -332,7 +332,7 @@ for (let i = 1; i <= 100; i++) {
 
 ## Hiring Announcement
 
-🔥 **We are hiring** interns, postdocs, and full-time researchers at the **General Vision Group, Shanghai AI Lab**, with a focus on multi-modality and vision foundation models. If you are interested, please contact [gaopeng@pjlab.org.cn](mailto:gaopeng@pjlab.org.cn).
+🔥 **We are hiring** interns, postdocs, and full-time researchers at the **General Vision Group, Shanghai AI Lab**, with a focus on multi-modality and vision foundation models. If you are interested, please contact [gaopengcuhk@gmail.com](mailto:gaopengcuhk@gmail.com).
 
 ## Citation
 If you find our LLaMA-Adapter code and paper useful, please kindly cite:
