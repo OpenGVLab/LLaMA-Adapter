@@ -339,7 +339,7 @@ If you find our LLaMA-Adapter code and paper useful, please kindly cite:
 ```bash
 @article{zhang2023llamaadapter,
   title = {LLaMA-Adapter: Efficient Fine-tuning of Language Models with Zero-init Attention},
-  author={Zhang, Renrui and Han, Jiaming and Zhou, Aojun and Hu, Xiangfei and Yan, Shilin and Lu, Pan and Li, Hongsheng and Gao, Peng and Qiao, Yu},
+  author={Zhang, Renrui and Han, Jiaming and Liu, Chris and Gao, Peng and Zhou, Aojun and Hu, Xiangfei and Yan, Shilin and Lu, Pan and Li, Hongsheng and Qiao, Yu},
   journal={arXiv preprint arXiv:2303.16199},
   year={2023}
 }
