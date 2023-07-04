@@ -12,6 +12,7 @@ llama_dir = "/path/to/LLaMA/"
 
 model, preprocess = llama.load("BIAS-7B", llama_dir, device)
 model.half()
+model.eval()
 
 def multi_modal_generate(
     img_path: str,
