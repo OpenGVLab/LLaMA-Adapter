@@ -25,7 +25,7 @@ The training process of LLaMA-Adapter V2 consists of the pre-training and fine-t
 
 ### Start pre-training
 
-We are now ready to start pre-training (please make sure that the original LLaMA / Open-Chinese-LLaMA weights are available in `/path/to/llama_model_weights`). 
+We are now ready to start pre-training (please make sure that the original LLaMA weights are available in `/path/to/llama_model_weights`). 
 
 ```bash
 . exps/pretrain.sh /path/to/llama_model_weights /path/to/pretrain-data-config.yaml /output/path
@@ -61,7 +61,7 @@ We are now ready to start pre-training (please make sure that the original LLaMA
 
 ```bash
 . exps/finetune.sh \
- /path/to/llama_model_weights /path/to/pre-trained/checkopint.pth \
+ /path/to/llama_model_weights /path/to/pre-trained/checkpoint.pth \
  /path/to/finetune-data-config.yaml /output/path
 ```
 
