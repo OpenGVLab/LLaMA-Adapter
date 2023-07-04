@@ -11,6 +11,7 @@ This repo proposes **LLaMA-Adapter (V2)**, a lightweight adaption method for fin
 Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/csuhan/LLaMA-Adapter), [LLaMA-Adapter V2](http://llama-adapter.opengvlab.com/) and [ImageBind-LLM](http://imagebind-llm.opengvlab.com/).
 
 ## News
+- **[2023.07.04]** We release the code for reproducing [Gorilla](https://github.com/ShishirPatil/gorilla) by both full finetune and LLaMA-Adapter, please see [gorilla/README.md](https://github.com/OpenGVLab/LLaMA-Adapter/blob/main/gorilla/README.md).
 - **[2023.06.08]** We release the [demo](http://imagebind-llm.opengvlab.com/) of ImageBind-LLM 🔥🔥🔥.
 - **[2023.06.06]** We release [Point-Bind](https://github.com/ZrrSkywalker/Point-Bind) 🔥🔥🔥 to extend ImageBind with 3D point clouds, which achieves 3D instruction-following capacity for [imagebind_LLM](imagebind_LLM).
 - **[2023.06.05]** We support the integration of LLaMA-Adapter (both V1 and V2) and [LangChain](https://python.langchain.com/en/latest/index.html). Check out the [Notebook](/docs/langchain_LLaMA_AdapterV2_demo.ipynb).
