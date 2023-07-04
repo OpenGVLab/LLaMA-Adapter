@@ -21,24 +21,29 @@ Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.
 - **[2023.04.28]** We release **LLaMA-Adapter V2**, a multi-modal instruction model. Check out our [paper](https://arxiv.org/abs/2304.15010), [demos](#demos) and [code](llama_adapter_v2_chat65b)!
 - **[2023.03.28]**  The [paper](https://arxiv.org/pdf/2303.16199.pdf) and [training code](alpaca_finetuning_v1) for **LLaMA-Adapter V1** are released. 📌
 
+
+## Released Models 
+
+| Name                                                         | Approach                                               | Data                                                         | Modality                           | Visual         | Text                  |
+| ------------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------- | -------------- | --------------------- |
+| [LLaMA-Adapter V1](./alpaca_finetuning_v1)                   | prefix, gate                                           | Alpaca                                                       | Text                               | ×              | LLaMA-7B              |
+| [LLaMA-Adapter V2 dialog](./llama_adapter_v2_chat65b)        | scale, bias, norm                                      | ShareGPT                                                     | Text                               | ×              | LLaMA-65B             |
+| [LLaMA-Adapter V2 multimodal](./llama_adapter_v2_multimodal) | [P] prefix, projection, gate <br />[F] bias, norm      | [P] Image-Text-V1<br />[F] GPT4LLM, LLaVA                    | Image&Text                         | CLIP-ViT-L/14  | LLaMA-7B              |
+| [ImageBind-LLM](./imagebind_LLM)                             | [P] prefix, projection, gate<br />[F] bias, norm, lora | [P] Image-Text-V1<br />[F] [Instruction Following](https://github.com/OpenGVLab/LLaMA-Adapter/blob/main/imagebind_LLM/docs/train.md#data-1) | ImageBind Modalities + Point Cloud | imagebind_huge | Open-Chinese-LLaMA-7B |
+| ImageBind-dialog                                             | [P] prefix, projection, gate<br />[F] bias, norm, lora | [P] Image-Text-V1<br />[F] LLaVA, ShareGPT                   | ImageBind Modalities + Point Cloud | imagebind_huge | Open-Chinese-LLaMA-7B |
+
++ [P] means **P**re-train and [F] means **F**ine-tune
++ **Image-Text-V1** is  a concatenation of LAION400M, COYO, MMC4, SBU, Conceptual Captions, and COCO
++ **ImageBind Modalities** include image, video, text, audio, depth, thermal, IMU
++ **ImageBind-dialog** will be release soon
+
+
 ## <div id="demos">Demos (LLaMA-Adapter V2)</div>
-
-### -> :tv: YouTube Video
-
-[![YouTube Video](docs/youtube.png)](https://www.youtube.com/watch?v=GAJyWkkSd8M)
-
-
 
 ### -> Chatbot System
 
 <img src="docs/chat_demo.png" width="80%" />
 
-### -> Visual Instruction Model
-
-<img src="docs/multi_model_example_1.png" width="60%" />
-<img src="docs/multi_model_example_2.png" width="60%" />
-<img src="docs/multi_model_example_3.png" width="60%" />
-<img src="docs/multi_model_example_4.png" width="60%" />
 
 <!-- | <img src="docs/multi_model_example_1.png" />  | <img src="docs/multi_model_example_2.png" />  |
 |---|---|
