@@ -37,6 +37,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 llama_dir = "/path/to/LLaMA/"
 
+# choose from BIAS-7B, LORA-BIAS-7B
 model, preprocess = llama.load("BIAS-7B", llama_dir, device)
 model.eval()
 
@@ -72,7 +73,7 @@ import llama
 print(llama.available_models())
 ```
 
-Now we provide `BIAS-7B`, which fine-tunes the `bias` and `norm` parameters of LLaMA. We will include more pretrained models in the future, such as the LoRA fine-tuning model `LoRA-7B` and partial-tuning model `PARTIAL-7B`.
+Now we provide `BIAS-7B` which fine-tunes the `bias` and `norm` parameters of LLaMA, and `LORA-BIAS-7B` which fine-tunes the `bias`, `norm` and `lora` parameters of LLaMA. We will include more pretrained models in the future, such as the LoRA fine-tuning model `LORA-7B` and partial-tuning model `PARTIAL-7B`.
 
 ## Pre-traininig & Fine-tuning
 See [train.md](docs/train.md)

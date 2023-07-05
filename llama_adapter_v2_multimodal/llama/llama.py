@@ -26,6 +26,7 @@ class ModelArgs:
     w_bias: bool = False # use bias tuning
     w_lora: bool = False # use lora tuning
     lora_rank: int = 16
+    w_new_gate: bool = False # for compatibility
 
 
 class RMSNorm(torch.nn.Module):
@@ -125,6 +126,10 @@ class Attention(nn.Module):
         self.cache_v = None
 
         self.gate = torch.nn.Parameter(torch.zeros(1, self.n_local_heads, 1, 1))
+        
+        self.w_new_gate = args.w_new_gate
+        if args.w_new_gate:
+            self.new_gate = torch.nn.Parameter(torch.ones(1, 1, 1, 1))
 
 
     def train(self, mode: bool = True):
@@ -194,6 +199,8 @@ class Attention(nn.Module):
             if adapter_len > 1:
                 adapter_scores = torch.matmul(xq, adapter_k.transpose(2, 3)) / math.sqrt(self.head_dim)
                 adapter_scores = self.gate.tanh() * F.softmax(adapter_scores.float(), dim=-1).type_as(xq)
+                if self.w_new_gate:
+                    adapter_scores = self.new_gate * adapter_scores
                 output = output + torch.matmul(adapter_scores, adapter_v)
             else:
                 output = output + self.gate.tanh() * adapter_v

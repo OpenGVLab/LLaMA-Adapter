@@ -7,6 +7,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 llama_dir = "/path/to/LLaMA/"
 
+# choose from BIAS-7B, LORA-BIAS-7B
 model, preprocess = llama.load("BIAS-7B", llama_dir, device)
 model.eval()
 
