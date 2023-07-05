@@ -75,6 +75,9 @@ conda env create -f environment.yml
 
 * Use Ctrl+C to exit the demo at any time.
 
+## Demo
+<img src="../docs/chat_demo.png" width="80%" />
+
 ## Known issues
 
 * Some users may experience the error `RuntimeError: Expected is_sm80 to be true, but got false.` (Mostly sm_86 GPU users, including A6000, A5000 and 3090). This is because we changed the attention module to use `torch.nn.functional.scaled_dot_product_attention` if it exists, but a [dispatch logic error](https://github.com/pytorch/pytorch/issues/94883) in PyTorch = 2.0.0 causes failure on some GPU architectures. The affected users can upgrade to PyTorch >= 2.1.0 or the nightly build, in which the bug is fixed.
