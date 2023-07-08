@@ -65,20 +65,33 @@ We are now ready to start pre-training (please make sure that the original LLaMA
  /path/to/finetune-data-config.yaml /output/path
 ```
 
-### Save the adapter
+### Test and Save
 
 ```python
 import os 
 from llama.llama_adapter import LLaMA_adapter
 import util.misc as misc
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 llama_dir = "path/to/llama/"
+
 llama_type = '7B'
 llama_ckpt_dir = os.path.join(llama_dir, llama_type)
 llama_tokenzier_path = os.path.join(llama_dir, 'tokenizer.model')
 model = LLaMA_adapter(llama_ckpt_dir, llama_tokenzier_path)
 
+
 misc.load_model(model, 'path/to/finetune/checkpoint.pth')
+model.eval()
+model.to(device)
+
+prompt = llama.format_prompt('your prompt')
+img = Image.fromarray(cv2.imread("your image"))
+img = model.clip_transform(img).unsqueeze(0).to(device)
+
+result = model.generate(img, [prompt])[0]
+
+print(result)
 model.save('path/to/adapter-7B.pth') # Please end it with -llama_type.pth.
 ```
 
