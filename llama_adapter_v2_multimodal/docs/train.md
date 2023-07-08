@@ -65,3 +65,20 @@ We are now ready to start pre-training (please make sure that the original LLaMA
  /path/to/finetune-data-config.yaml /output/path
 ```
 
+### Save the adapter
+
+```python
+import os 
+from llama.llama_adapter import LLaMA_adapter
+import util.misc as misc
+
+llama_dir = "path/to/llama/"
+llama_type = '7B'
+llama_ckpt_dir = os.path.join(llama_dir, llama_type)
+llama_tokenzier_path = os.path.join(llama_dir, 'tokenizer.model')
+model = LLaMA_adapter(llama_ckpt_dir, llama_tokenzier_path)
+
+misc.load_model(model, 'path/to/finetune/checkpoint.pth')
+model.save('path/to/adapter-7B.pth') # Please end it with -llama_type.pth.
+```
+

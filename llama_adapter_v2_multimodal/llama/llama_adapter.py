@@ -319,7 +319,7 @@ def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu",
         return RuntimeError(f"Model {name} not found; available models = {available_models()}"), None
 
     # BIAS-7B or https://xxx/sha256_BIAS-7B.pth -> 7B
-    llama_type = name[-6:-4]#name.split('.')[0].split('-')[-1]
+    llama_type = name.split('.')[0].split('-')[-1]
     llama_ckpt_dir = os.path.join(llama_dir, llama_type)
     llama_tokenzier_path = os.path.join(llama_dir, 'tokenizer.model')
 
