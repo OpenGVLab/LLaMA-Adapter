@@ -11,14 +11,15 @@ This repo proposes **LLaMA-Adapter (V2)**, a lightweight adaption method for fin
 Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/csuhan/LLaMA-Adapter), [LLaMA-Adapter V2](http://llama-adapter.opengvlab.com/) and [ImageBind-LLM](http://imagebind-llm.opengvlab.com/).
 
 ## News
-- **[2023.07.05]** We release the pretrain/finetune code of [llama_adapter_v2_multimodal](https://github.com/OpenGVLab/LLaMA-Adapter/tree/main/llama_adapter_v2_multimodal)🔥🔥🔥.
+- **[2023.07.24]** We release **[LLaMA2-Accessory](https://github.com/Alpha-VLLM/Llama2-Accesory)**, an open-source toolkit for **pre-training**, **fine-tunnig** and **deployment** of **Large Language Models (LLMs)** and **mutlimodal LLMs**. Please check [Alpha-VLLM/Llama2-Accesory](https://github.com/Alpha-VLLM/Llama2-Accesory) for more details!🔥🔥🔥
+- **[2023.07.05]** We release the pretrain/finetune code of [llama_adapter_v2_multimodal](https://github.com/OpenGVLab/LLaMA-Adapter/tree/main/llama_adapter_v2_multimodal).
 - **[2023.07.04]** We release the code for reproducing [Gorilla](https://github.com/ShishirPatil/gorilla) by both full finetune and LLaMA-Adapter, please see [gorilla/README.md](https://github.com/OpenGVLab/LLaMA-Adapter/blob/main/gorilla/README.md).
-- **[2023.06.08]** We release the [demo](http://imagebind-llm.opengvlab.com/) of ImageBind-LLM 🔥🔥🔥.
-- **[2023.06.06]** We release [Point-Bind](https://github.com/ZrrSkywalker/Point-Bind) 🔥🔥🔥 to extend ImageBind with 3D point clouds, which achieves 3D instruction-following capacity for [imagebind_LLM](imagebind_LLM).
+- **[2023.06.08]** We release the [demo](http://imagebind-llm.opengvlab.com/) of ImageBind-LLM.
+- **[2023.06.06]** We release [Point-Bind](https://github.com/ZrrSkywalker/Point-Bind) to extend ImageBind with 3D point clouds, which achieves 3D instruction-following capacity for [imagebind_LLM](imagebind_LLM).
 - **[2023.06.05]** We support the integration of LLaMA-Adapter (both V1 and V2) and [LangChain](https://python.langchain.com/en/latest/index.html). Check out the [Notebook](/docs/langchain_LLaMA_AdapterV2_demo.ipynb).
-- **[2023.05.29]** We release the code of ImageBind-LLM at [imagebind_LLM](imagebind_LLM) 🔥🔥🔥.
+- **[2023.05.29]** We release the code of ImageBind-LLM at [imagebind_LLM](imagebind_LLM).
 - **[2023.05.23]** We release the [demos](http://llama-adapter.opengvlab.com/) and [multi-modal code](llama_adapter_v2_multimodal) of LLaMA-Adapter V2!
-- **[2023.05.05]** We release the paper and code of our new work [Personalize Segment Anything](https://github.com/ZrrSkywalker/Personalize-SAM) 🔥🔥🔥, which efficiently fine-tunes Segment Anything with **10 seconds**, and improves DreamBooth for better **text-to-image generation**. 
+- **[2023.05.05]** We release the paper and code of our new work [Personalize Segment Anything](https://github.com/ZrrSkywalker/Personalize-SAM), which efficiently fine-tunes Segment Anything with **10 seconds**, and improves DreamBooth for better **text-to-image generation**. 
 - **[2023.04.30]** We noticed that GPT-4 evaluation has a strong positional bias in favor of the first response. We will soon update the paper to reveal the position bias. Great thanks to [Canwen Xu](https://scholar.google.com/citations?user=oopKCDMAAAAJ&hl=en).
 - **[2023.04.28]** We release **LLaMA-Adapter V2**, a multi-modal instruction model. Check out our [paper](https://arxiv.org/abs/2304.15010), [demos](#demos) and [code](llama_adapter_v2_chat65b)!
 - **[2023.03.28]**  The [paper](https://arxiv.org/pdf/2303.16199.pdf) and [training code](alpaca_finetuning_v1) for **LLaMA-Adapter V1** are released. 📌
