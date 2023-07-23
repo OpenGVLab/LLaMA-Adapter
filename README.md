@@ -11,7 +11,7 @@ This repo proposes **LLaMA-Adapter (V2)**, a lightweight adaption method for fin
 Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/csuhan/LLaMA-Adapter), [LLaMA-Adapter V2](http://llama-adapter.opengvlab.com/) and [ImageBind-LLM](http://imagebind-llm.opengvlab.com/).
 
 ## News
-- **[2023.07.24]** We release **[LLaMA2-Accessory](https://github.com/Alpha-VLLM/LLaMA2-Accessory)**, an open-source toolkit for **pre-training**, **fine-tunnig** and **deployment** of **Large Language Models (LLMs)** and **mutlimodal LLMs**. Please check [Alpha-VLLM/LLaMA2-Accessory](https://github.com/Alpha-VLLM/LLaMA2-Accessory) for more details!🔥🔥🔥
+- **[2023.07.24]** We release **[LLaMA2-Accessory](https://github.com/Alpha-VLLM/LLaMA2-Accessory)**, an open-source toolkit for **pre-training**, **fine-tuning** and **deployment** of **Large Language Models (LLMs)** and **mutlimodal LLMs**. Please check [Alpha-VLLM/LLaMA2-Accessory](https://github.com/Alpha-VLLM/LLaMA2-Accessory) for more details!🔥🔥🔥
 - **[2023.07.05]** We release the pretrain/finetune code of [llama_adapter_v2_multimodal](https://github.com/OpenGVLab/LLaMA-Adapter/tree/main/llama_adapter_v2_multimodal).
 - **[2023.07.04]** We release the code for reproducing [Gorilla](https://github.com/ShishirPatil/gorilla) by both full finetune and LLaMA-Adapter, please see [gorilla/README.md](https://github.com/OpenGVLab/LLaMA-Adapter/blob/main/gorilla/README.md).
 - **[2023.06.08]** We release the [demo](http://imagebind-llm.opengvlab.com/) of ImageBind-LLM.
