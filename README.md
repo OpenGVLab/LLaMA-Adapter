@@ -1,6 +1,6 @@
 # LLaMA-Adapter: Efficient Fine-tuning of LLaMA 🚀
 
-## Announcement: We release **[LLaMA2-Accessory](https://github.com/Alpha-VLLM/LLaMA2-Accessory)**, an open-source toolkit for **pre-training**, **fine-tuning** and **deployment** of **LLMs** and **mutlimodal LLMs**.🔥🔥🔥
+## Announcement: We release **[LLaMA2-Accessory](https://github.com/Alpha-VLLM/LLaMA2-Accessory)**, an open-source toolkit for **pre-training**, **fine-tuning** and **deployment** of **LLMs** and **mutlimodal LLMs**.🔥
 
 Official implementation of ['LLaMA-Adapter: Efficient Fine-tuning of Language Models with Zero-init Attention'](https://arxiv.org/pdf/2303.16199.pdf) and ['LLaMA-Adapter V2: Parameter-Efficient Visual Instruction Model'](https://arxiv.org/pdf/2304.15010.pdf).
 
