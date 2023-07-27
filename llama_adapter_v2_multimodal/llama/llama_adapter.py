@@ -20,6 +20,9 @@ class LLaMA_adapter(nn.Module):
                  v_embed_dim=768, v_depth=8,
                  v_num_heads=16, v_mlp_ratio=4.0,
                  query_len=10, query_layer=31,
+                 w_bias=False, 
+                 w_lora=False, lora_rank=16, 
+                 w_new_gate=False,
                  phase="finetune"):
         super().__init__()
 
@@ -58,6 +61,9 @@ class LLaMA_adapter(nn.Module):
 
         # 5. llama
         model_args.w_bias = w_bias
+        model_args.w_lora = w_lora
+        model_args.lora_rank = lora_rank
+        model_args.w_new_gate = w_new_gate
         model_args.vocab_size = self.tokenizer.n_words
         torch.set_default_tensor_type(torch.cuda.HalfTensor)
         self.llama = Transformer(model_args)
@@ -268,8 +274,10 @@ class LLaMA_adapter(nn.Module):
         return decoded
 
 
+
 _MODELS = {
     "BIAS-7B": "https://github.com/OpenGVLab/LLaMA-Adapter/releases/download/v.2.0.0/7fa55208379faf2dd862565284101b0e4a2a72114d6490a95e432cf9d9b6c813_BIAS-7B.pth",
+    "LORA-BIAS-7B": "https://github.com/OpenGVLab/LLaMA-Adapter/releases/download/v.2.0.0/1bcbffc43484332672092e0024a8699a6eb5f558161aebf98a7c6b1db67224d1_LORA-BIAS-7B.pth",
     # "LORA16-7B": "",
     # "PARTIAL-7B": ""
 }
@@ -284,10 +292,8 @@ def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu",
     elif os.path.isfile(name):
         model_path = name
     else:
-        return RuntimeError(f"Model {name} not found; available models = {available_models()}")
+        return RuntimeError(f"Model {name} not found; available models = {available_models()}"), None
 
-    ckpt = torch.load(model_path, map_location='cpu')
-    
     # BIAS-7B or https://xxx/sha256_BIAS-7B.pth -> 7B
     llama_type = name.split('.')[0].split('-')[-1]
     llama_ckpt_dir = os.path.join(llama_dir, llama_type)
@@ -296,6 +302,7 @@ def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu",
     # load llama_adapter weights and model_cfg
     print(f'Loading LLaMA-Adapter from {model_path}')
     ckpt = torch.load(model_path, map_location='cpu')
+    model_cfg = ckpt.get('config', {})
 
     model = LLaMA_adapter(
         llama_ckpt_dir, llama_tokenzier_path,
@@ -304,6 +311,10 @@ def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu",
         v_embed_dim=768, v_depth=8,
         v_num_heads=16, v_mlp_ratio=4.0,
         query_len=10, query_layer=31,
+        w_bias=model_cfg.get('w_bias', False), 
+        w_lora=model_cfg.get('w_lora', False), 
+        lora_rank=model_cfg.get('lora_rank', 16),
+        w_new_gate=model_cfg.get('w_lora', False), # for compatibility
         phase=phase)
 
     load_result = model.load_state_dict(ckpt['model'], strict=False)
