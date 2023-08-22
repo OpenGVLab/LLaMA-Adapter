@@ -14,13 +14,13 @@ Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.
 
 ## News
 - **[2023.07.24]** We release **[LLaMA2-Accessory](https://github.com/Alpha-VLLM/LLaMA2-Accessory)**, an open-source toolkit for **pre-training**, **fine-tuning** and **deployment** of **Large Language Models (LLMs)** and **mutlimodal LLMs**. Please check [Alpha-VLLM/LLaMA2-Accessory](https://github.com/Alpha-VLLM/LLaMA2-Accessory) for more details!🔥🔥🔥
-- **[2023.07.05]** We release the pretrain/finetune code of [llama_adapter_v2_multimodal](https://github.com/OpenGVLab/LLaMA-Adapter/tree/main/llama_adapter_v2_multimodal).
+- **[2023.07.05]** We release the pretrain/finetune code of [llama_adapter_v2_multimodal7b](https://github.com/OpenGVLab/LLaMA-Adapter/tree/main/llama_adapter_v2_multimodal7b).
 - **[2023.07.04]** We release the code for reproducing [Gorilla](https://github.com/ShishirPatil/gorilla) by both full finetune and LLaMA-Adapter, please see [gorilla/README.md](https://github.com/OpenGVLab/LLaMA-Adapter/blob/main/gorilla/README.md).
 - **[2023.06.08]** We release the [demo](http://imagebind-llm.opengvlab.com/) of ImageBind-LLM.
 - **[2023.06.06]** We release [Point-Bind](https://github.com/ZrrSkywalker/Point-Bind) to extend ImageBind with 3D point clouds, which achieves 3D instruction-following capacity for [imagebind_LLM](imagebind_LLM).
 - **[2023.06.05]** We support the integration of LLaMA-Adapter (both V1 and V2) and [LangChain](https://python.langchain.com/en/latest/index.html). Check out the [Notebook](/docs/langchain_LLaMA_AdapterV2_demo.ipynb).
 - **[2023.05.29]** We release the code of ImageBind-LLM at [imagebind_LLM](imagebind_LLM).
-- **[2023.05.23]** We release the [demos](http://llama-adapter.opengvlab.com/) and [multi-modal code](llama_adapter_v2_multimodal) of LLaMA-Adapter V2!
+- **[2023.05.23]** We release the [demos](http://llama-adapter.opengvlab.com/) and [multi-modal code](llama_adapter_v2_multimodal7b) of LLaMA-Adapter V2!
 - **[2023.05.05]** We release the paper and code of our new work [Personalize Segment Anything](https://github.com/ZrrSkywalker/Personalize-SAM), which efficiently fine-tunes Segment Anything with **10 seconds**, and improves DreamBooth for better **text-to-image generation**. 
 - **[2023.04.30]** We noticed that GPT-4 evaluation has a strong positional bias in favor of the first response. We will soon update the paper to reveal the position bias. Great thanks to [Canwen Xu](https://scholar.google.com/citations?user=oopKCDMAAAAJ&hl=en).
 - **[2023.04.28]** We release **LLaMA-Adapter V2**, a multi-modal instruction model. Check out our [paper](https://arxiv.org/abs/2304.15010), [demos](#demos) and [code](llama_adapter_v2_chat65b)!
@@ -33,7 +33,7 @@ Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.
 | ------------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------- | -------------- | --------------------- |
 | [LLaMA-Adapter V1](./alpaca_finetuning_v1)                   | prefix, gate                                           | Alpaca                                                       | Text                               | ×              | LLaMA-7B              |
 | [LLaMA-Adapter V2 dialog](./llama_adapter_v2_chat65b)        | scale, bias, norm                                      | ShareGPT                                                     | Text                               | ×              | LLaMA-65B             |
-| [LLaMA-Adapter V2 multimodal](./llama_adapter_v2_multimodal) | [P] prefix, projection, gate <br />[F] bias, norm      | [P] Image-Text-V1<br />[F] GPT4LLM, LLaVA                    | Image&Text                         | CLIP-ViT-L/14  | LLaMA-7B              |
+| [LLaMA-Adapter V2 multimodal](./llama_adapter_v2_multimodal7b) | [P] prefix, projection, gate <br />[F] bias, norm      | [P] Image-Text-V1<br />[F] GPT4LLM, LLaVA                    | Image&Text                         | CLIP-ViT-L/14  | LLaMA-7B              |
 | [ImageBind-LLM](./imagebind_LLM)                             | [P] prefix, projection, gate<br />[F] bias, norm, lora | [P] Image-Text-V1<br />[F] [Instruction Following](https://github.com/OpenGVLab/LLaMA-Adapter/blob/main/imagebind_LLM/docs/train.md#data-1) | ImageBind Modalities + Point Cloud | imagebind_huge | Open-Chinese-LLaMA-7B |
 | ImageBind-dialog                                             | [P] prefix, projection, gate<br />[F] bias, norm, lora | [P] Image-Text-V1<br />[F] LLaVA, ShareGPT                   | ImageBind Modalities + Point Cloud | imagebind_huge | Open-Chinese-LLaMA-7B |
 
@@ -79,7 +79,7 @@ conda install pytorch cudatoolkit -c pytorch -y
 pip install -r requirements.txt
 pip install -e .
 ```
-**Note**: **To setup other models**, please refer to [llama_adapter_v2_chat65b](llama_adapter_v2_chat65b), [llama_adapter_v2_multimodal](llama_adapter_v2_multimodal) and [imagebind_LLM](imagebind_LLM) for more details.
+**Note**: **To setup other models**, please refer to [llama_adapter_v2_chat65b](llama_adapter_v2_chat65b), [llama_adapter_v2_multimodal7b](llama_adapter_v2_multimodal7b) and [imagebind_LLM](imagebind_LLM) for more details.
 
 ## Inference
 
