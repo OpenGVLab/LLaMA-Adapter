@@ -25,7 +25,7 @@
 
 ## Inference
 
-Here is a simple inference script for LLaMA-Adapter V2. The pre-trained model will be downloaded directly from [Github Release](https://github.com/ZrrSkywalker/LLaMA-Adapter/releases/tag/v.2.0.0).
+Here is a simple inference script for LLaMA-Adapter V2. The pre-trained model will be downloaded directly from [Github Release](https://github.com/OpenGVLab/LLaMA-Adapter/releases/tag/v.2.0.0).
 
 ```python
 import cv2
