@@ -69,6 +69,10 @@ import os
 from llama.llama_adapter import LLaMA_adapter
 import util.misc as misc
 import util.extract_adapter_from_checkpoint as extract
+from PIL import Image
+import cv2
+import torch
+import llama
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 

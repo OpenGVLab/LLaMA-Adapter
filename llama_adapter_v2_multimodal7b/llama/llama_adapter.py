@@ -279,6 +279,7 @@ _MODELS = {
     "BIAS-7B": "https://github.com/OpenGVLab/LLaMA-Adapter/releases/download/v.2.0.0/7fa55208379faf2dd862565284101b0e4a2a72114d6490a95e432cf9d9b6c813_BIAS-7B.pth",
     "LORA-BIAS-7B": "https://github.com/OpenGVLab/LLaMA-Adapter/releases/download/v.2.0.0/1bcbffc43484332672092e0024a8699a6eb5f558161aebf98a7c6b1db67224d1_LORA-BIAS-7B.pth",
     "CAPTION-7B": "https://github.com/OpenGVLab/LLaMA-Adapter/releases/download/v.2.0.0/5088aeb63a89746b90bcfd5cb819e1c7411b2771b267c6d131ce73e250a8abf0_CAPTION-7B.pth",
+    "LORA-BIAS-7B-v21": "https://github.com/OpenGVLab/LLaMA-Adapter/releases/download/v.2.1.0/427dbc27bf62a3ef7a24ffd3ed2c3162_LORA-BIAS-7B-v21.pth",
     # "LORA16-7B": "",
     # "PARTIAL-7B": ""
 }
@@ -286,7 +287,7 @@ _MODELS = {
 def available_models():
     return list(_MODELS.keys())
 
-def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu", download_root='ckpts', max_seq_len=512,
+def load(name, llama_dir, llama_type="7B", device="cuda" if torch.cuda.is_available() else "cpu", download_root='ckpts', max_seq_len=512,
         phase="finetune"):
     if name in _MODELS:
         model_path = _download(_MODELS[name], download_root)
@@ -296,7 +297,7 @@ def load(name, llama_dir, device="cuda" if torch.cuda.is_available() else "cpu",
         return RuntimeError(f"Model {name} not found; available models = {available_models()}"), None
 
     # BIAS-7B or https://xxx/sha256_BIAS-7B.pth -> 7B
-    llama_type = name.split('.')[0].split('-')[-1]
+    # llama_type = name.split('.')[0].split('-')[-1]
     llama_ckpt_dir = os.path.join(llama_dir, llama_type)
     llama_tokenzier_path = os.path.join(llama_dir, 'tokenizer.model')
 

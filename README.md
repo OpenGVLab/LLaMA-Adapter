@@ -13,6 +13,7 @@ This repo proposes **LLaMA-Adapter (V2)**, a lightweight adaption method for fin
 Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/csuhan/LLaMA-Adapter), [LLaMA-Adapter V2](http://llama-adapter.opengvlab.com/) and [ImageBind-LLM](http://imagebind-llm.opengvlab.com/).
 
 ## News
+- **[2023.10.11]** We realse **LLaMA-Adapter V2.1**, an improved version of LLaMA-Adapter V2 with stronger multi-modal reasoning performance. Check [llama_adapter_v2_multimodal7b](llama_adapter_v2_multimodal7b) for details.
 - **[2023.08.28]** We release quantized LLM with [OmniQuant](https://github.com/OpenGVLab/OmniQuant), which is an efficient, accurate, and omnibearing (even extremely low bit) quantization algorithm. Multimodal version is coming soon.🔥🔥🔥
 - **[2023.07.24]** We release **[LLaMA2-Accessory](https://github.com/Alpha-VLLM/LLaMA2-Accessory)**, an open-source toolkit for **pre-training**, **fine-tuning** and **deployment** of **Large Language Models (LLMs)** and **mutlimodal LLMs**. Please check [Alpha-VLLM/LLaMA2-Accessory](https://github.com/Alpha-VLLM/LLaMA2-Accessory) for more details!🔥🔥🔥
 - **[2023.07.05]** We release the pretrain/finetune code of [llama_adapter_v2_multimodal7b](https://github.com/OpenGVLab/LLaMA-Adapter/tree/main/llama_adapter_v2_multimodal7b).

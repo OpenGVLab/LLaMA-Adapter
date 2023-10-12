@@ -1,6 +1,7 @@
 # LLaMA-Adapter-V2 Multi-modal
 
 ## News
+* [Oct 11, 2023] Release LLaMA-Adapter V2.1 and evaluation on MME.
 * [July 5, 2023] Release pre-traininig and fine-tuning codes.
 * [May 26, 2023] Initial release.
 
@@ -37,8 +38,8 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 llama_dir = "/path/to/LLaMA/"
 
-# choose from BIAS-7B, LORA-BIAS-7B
-model, preprocess = llama.load("BIAS-7B", llama_dir, device)
+# choose from BIAS-7B, LORA-BIAS-7B, LORA-BIAS-7B-v21
+model, preprocess = llama.load("BIAS-7B", llama_dir, llama_type="7B", device=device)
 model.eval()
 
 prompt = llama.format_prompt("Please introduce this painting.")
@@ -55,6 +56,8 @@ The output will look like the following:
 The painting features a cute white lama, or llama, standing on a wooden floor. The llama is holding a variety of tools and accessories, such as a paintbrush, a pencil, a ruler, a pair of scissors, and a paint can. The llama is dressed in a suit, which adds a touch of sophistication to the scene. The painting is a creative and whimsical representation of a person or animal holding various tools and accessories, making it an interesting and unique piece of art.
 ```
 
+## Evaluation
+Check [eval.md](./docs/eval.md) for details.
 
 ## Online demo
 
