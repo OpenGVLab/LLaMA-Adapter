@@ -31,6 +31,8 @@
 
 ## Results
 
+> For comparisons with other works, please check [MME Leaderboard](https://github.com/BradyFU/Awesome-Multimodal-Large-Language-Models/tree/Evaluation).
+
 * **LLaMA-Adapter V2.1**
 
     ```
