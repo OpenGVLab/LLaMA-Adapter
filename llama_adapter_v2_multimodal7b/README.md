@@ -78,5 +78,6 @@ print(llama.available_models())
 
 Now we provide `BIAS-7B` which fine-tunes the `bias` and `norm` parameters of LLaMA, and `LORA-BIAS-7B` which fine-tunes the `bias`, `norm` and `lora` parameters of LLaMA. We will include more pretrained models in the future, such as the LoRA fine-tuning model `LORA-7B` and partial-tuning model `PARTIAL-7B`.
 
+#TODO: ADD NEW MODELS
 ## Pre-traininig & Fine-tuning
 See [train.md](docs/train.md)
