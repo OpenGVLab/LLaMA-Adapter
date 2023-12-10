@@ -15,7 +15,7 @@ Try out the web demo 🤗 of LLaMA-Adapter: [![Hugging Face Spaces](https://img.
 Join us at [Wechat](https://github.com/Alpha-VLLM/LLaMA2-Accessory/blob/main/docs/wechat.md)!
 
 ## News
-- **[20233.12.08]** We release [OneLLM](https://github.com/csuhan/OneLLM) which aligns **eight** modalities to language using a unified framework.🔥🔥🔥
+- **[2023.12.08]** We release [OneLLM](https://github.com/csuhan/OneLLM) which aligns **eight** modalities to language using a unified framework.🔥🔥🔥
 - **[2023.11.11]** We release [SPHINX](https://github.com/Alpha-VLLM/LLaMA2-Accessory/tree/main/SPHINX), a new multi-modal LLM, which is a huge leap from LLaMa-Adapter-V2.🔥🔥🔥
 - **[2023.10.11]** We realse **LLaMA-Adapter V2.1**, an improved version of LLaMA-Adapter V2 with stronger multi-modal reasoning performance. Check [llama_adapter_v2_multimodal7b](llama_adapter_v2_multimodal7b) for details.
 - **[2023.08.28]** We release quantized LLM with [OmniQuant](https://github.com/OpenGVLab/OmniQuant), which is an efficient, accurate, and omnibearing (even extremely low bit) quantization algorithm. Multimodal version is coming soon.🔥🔥🔥
