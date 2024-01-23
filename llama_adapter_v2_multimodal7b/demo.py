@@ -8,7 +8,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 llama_dir = "/path/to/LLaMA/"
 
 # choose from BIAS-7B, LORA-BIAS-7B, CAPTION-7B.pth
-model, preprocess = llama.load("BIAS-7B", llama_dir, device)
+model, preprocess = llama.load("BIAS-7B", llama_dir, device=device)
 model.eval()
 
 prompt = llama.format_prompt('Please introduce this painting.')
