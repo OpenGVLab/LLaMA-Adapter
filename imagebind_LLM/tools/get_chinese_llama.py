@@ -33,6 +33,7 @@ ori_dict = torch.load(os.path.join(ori_path, 'consolidated.00.pth'), map_locatio
 delta_dict = torch.load(os.path.join(delta_path, 'consolidated.00.pth'), map_location="cpu")
 new_dict = {}
 for key in ori_dict:
+    if "rope" in key: continue
     new_value = (ori_dict[key].float() + delta_dict[key].float()).half()
     new_dict[key] = new_value
 
